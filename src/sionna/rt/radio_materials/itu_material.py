@@ -14,11 +14,11 @@ from .radio_material import RadioMaterial
 class ITURadioMaterial(RadioMaterial):
     # pylint: disable=line-too-long
     r"""
-    Class implementing the materials defined in the ITU-R P.2040-3 recommendation :cite:p:`ITURP20403`
+    Class implementing the materials defined in the ITU-R P.2040-4 recommendation :cite:p:`ITURP20404`
 
     This class inherits from :class:`~sionna.rt.RadioMaterial`.
 
-    The models from the ITU-R P.2040-3 recommendation are based on curve fitting
+    The models from the ITU-R P.2040-4 recommendation are based on curve fitting
     to measurement results and assume non-ionized and non-magnetic materials (:math:`\mu_r = 1`).
     Frequency dependence is modeled by
 
@@ -52,20 +52,25 @@ class ITURadioMaterial(RadioMaterial):
 
     # ITU material colors
     ITU_MATERIAL_COLORS = {
-        "marble": (0.701, 0.644, 0.485),
+        "vacuum": (0.75, 0.75, 0.75),
         "concrete": (0.539, 0.539, 0.539),
-        "wood": (0.266, 0.109, 0.060),
-        "metal": (0.220, 0.220, 0.254),
         "brick": (0.402, 0.112, 0.087),
+        "plasterboard": (0.051, 0.539, 0.133),
+        "wood": (0.266, 0.109, 0.060),
         "glass": (0.168, 0.139, 0.509),
-        "floorboard": (0.539, 0.386, 0.025),
+        "clear_acrylic": (0.70, 0.85, 0.95),
         "ceiling_board": (0.376, 0.539, 0.117),
         "chipboard": (0.509, 0.159, 0.323),
-        "plasterboard": (0.051, 0.539, 0.133),
         "plywood": (0.136, 0.076, 0.539),
+        "marble": (0.701, 0.644, 0.485),
+        "floorboard": (0.539, 0.386, 0.025),
+        "vinyl_tile": (0.20, 0.20, 0.20),
+        "carpet_tile": (0.45, 0.10, 0.10),
+        "asphalt_concrete": (0.25, 0.25, 0.25),
+        "metal": (0.220, 0.220, 0.254),
         "very_dry_ground": (0.539, 0.319, 0.223),
         "medium_dry_ground": (0.539, 0.181, 0.076),
-        "wet_ground": (0.539, 0.027, 0.147)
+        "wet_ground": (0.539, 0.027, 0.147),
     }
 
     # pylint: disable=line-too-long
