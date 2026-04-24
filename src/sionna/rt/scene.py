@@ -1328,3 +1328,48 @@ Example scene containing three metallic rectangles
 .. figure:: ../figures/triple_reflector.png
    :align: center
 """
+
+bedroom = str(files(scenes).joinpath("bedroom/bedroom.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a bedroom
+
+.. figure:: ../figures/bedroom.png
+   :align: center
+"""
+
+classroom = str(files(scenes).joinpath("classroom/classroom.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a classroom
+
+.. figure:: ../figures/classroom.png
+   :align: center
+"""
+
+home_office = str(files(scenes).joinpath("home_office/home_office.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a home office
+
+.. figure:: ../figures/home_office.png
+   :align: center
+"""
+
+living_room = str(files(scenes).joinpath("living_room/living_room.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a living room
+
+.. figure:: ../figures/living_room.png
+   :align: center
+"""
+
+storage_room = str(files(scenes).joinpath("storage_room/storage_room.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a storage room
+
+.. figure:: ../figures/storage_room.png
+   :align: center
+"""
