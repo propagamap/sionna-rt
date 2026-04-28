@@ -83,6 +83,7 @@ class ITURadioMaterial(RadioMaterial):
         xpd_coefficient: float | mi.Float = 0.0,
         scattering_pattern: Callable[[mi.Vector3f, mi.Vector3f, ...], mi.Float] | None = None,
         color: Tuple[float, float, float] | None = None,
+        forced_range: Tuple[float, float] | None = None,
         props: mi.Properties | None = None,
         **kwargs):
 
@@ -108,6 +109,7 @@ class ITURadioMaterial(RadioMaterial):
         if itu_type not in ITU_MATERIALS_PROPERTIES:
             raise ValueError(f"Invalid ITU material type \"{itu_type}\"")
         self._itu_type = itu_type
+        self._forced_range = forced_range
 
         # Order of priority to set the visual color of this ITU material:
         # 1. `color` keyword argument
@@ -125,7 +127,7 @@ class ITURadioMaterial(RadioMaterial):
 
         # Frequency update callback
         def cb(f: float):
-            return itu_material(itu_type, f)
+            return itu_material(itu_type, f, self._forced_range)
 
         if has_props:
             super().__init__(scattering_pattern=scattering_pattern,
@@ -150,6 +152,23 @@ class ITURadioMaterial(RadioMaterial):
         :type: :py:class:`str`
         """
         return self._itu_type
+
+    @property
+    def forced_range(self):
+        r"""
+        Get/set the frequency range (min_GHz, max_GHz) to force when evaluating
+        ITU material parameters, or :py:class:`None` to use automatic selection.
+        Setting this property immediately re-evaluates the material parameters
+        at the current scene frequency.
+
+        :type: :py:class:`tuple` [:py:class:`float`, :py:class:`float`] | :py:class:`None`
+        """
+        return self._forced_range
+
+    @forced_range.setter
+    def forced_range(self, value):
+        self._forced_range = value
+        self.frequency_update()
 
     def to_string(self) -> str:
         r"""
