@@ -1251,7 +1251,7 @@ The data is licensed under the `Open Data Commons Open Database License (ODbL) <
    :align: center
 """
 
-san_francisco = str(files(scenes).joinpath("san_francisco/san_francisco.xml"));
+san_francisco = str(files(scenes).joinpath("san_francisco/san_francisco.xml"))
 # pylint: disable=C0301
 """
 Example scene containing a portion of San Francisco.
