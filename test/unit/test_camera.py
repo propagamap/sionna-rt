@@ -53,5 +53,5 @@ def test01_camera_create():
     check(c, expected)
 
     c.position = np.array([1, 2, 3])
-    expected[:3, 3] = [1, 2, 4]
+    expected[:3, 3] = [1, 2, 3]
     check(c, expected)
