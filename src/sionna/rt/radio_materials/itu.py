@@ -74,7 +74,7 @@ ITU_MATERIALS_PROPERTIES = {
     "wet_ground"        :   { (1.0, 10.)    :   (30.,   -0.4,  0.15,      1.30)   }
 }
 
-def itu_material(name: str, f: mi.Float, forced_ranges: Tuple[float, float] | None = None) -> Tuple[mi.Float, mi.Float]:
+def itu_material(name: str, f: mi.Float, forced_freq_range: Tuple[float, float] | None = None) -> Tuple[mi.Float, mi.Float]:
     r"""
     Evaluates the real component of the relative permittivity and the
     conductivity [S/m] of the ITU material `name` for the frequency `f` [Hz]
@@ -84,6 +84,8 @@ def itu_material(name: str, f: mi.Float, forced_ranges: Tuple[float, float] | No
     :param name: Name of the ITU material to evaluate.
         Must be a key of `ITU_MATERIALS_PROPERTIES`.
     :param f: Frequency [Hz]
+    :param forced_freq_range: Forces the use of the parameters corresponding to the given frequency range (in GHz).
+        Must be a key of `ITU_MATERIALS_PROPERTIES[name]`.
 
     :return: Real component of the relative permittivity and conductivity [S/m]
     """
@@ -94,9 +96,9 @@ def itu_material(name: str, f: mi.Float, forced_ranges: Tuple[float, float] | No
 
     f_ghz = f/1e9
     
-    if forced_ranges is not None and forced_ranges in props:
-        if forced_ranges[0] <= f_ghz <= forced_ranges[1]:
-            a, b, c, d = props[forced_ranges]
+    if forced_freq_range is not None and forced_freq_range in props:
+        if forced_freq_range[0] <= f_ghz <= forced_freq_range[1]:
+            a, b, c, d = props[forced_freq_range]
             eta_r = a * dr.power(f_ghz, b)
             sigma = c * dr.power(f_ghz, d)
             return eta_r, sigma

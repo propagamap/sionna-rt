@@ -47,6 +47,7 @@ class ITURadioMaterial(RadioMaterial):
     :param xpd_coefficient:  Cross-polarization discrimination coefficient :math:`K_x\in[0,1]` as defined in :eq:`xpd`. Only relevant if ``scattering_coefficient`` is not equal to zero. Ignored if ``props`` is provided.
     :param scattering_pattern: Scattering pattern to use for diffuse reflection. Only relevant if ``scattering_coefficient`` is not equal to zero. Ignored if ``props`` is provided. Defaults to :func:`~sionna.rt.lambertian_pattern`.
     :param color: RGB (red, green, blue) color for the radio material as displayed in the previewer and renderer. Each RGB component must have a value within the range :math:`[0,1]`. If set to :py:class:`None`, then a random color is used.
+    :param forced_freq_range: Forces the use of the parameters corresponding to the given frequency range (in GHz) when evaluating the material properties. This can be used to evaluate the material properties at frequencies for which there is more than one defined range with different properties.
     :param props: Mitsuba container storing the material properties, and used when loading a scene to initialize the radio material.
     """
 
@@ -83,7 +84,7 @@ class ITURadioMaterial(RadioMaterial):
         xpd_coefficient: float | mi.Float = 0.0,
         scattering_pattern: Callable[[mi.Vector3f, mi.Vector3f, ...], mi.Float] | None = None,
         color: Tuple[float, float, float] | None = None,
-        forced_range: Tuple[float, float] | None = None,
+        forced_freq_range: Tuple[float, float] | None = None,
         props: mi.Properties | None = None,
         **kwargs):
 
@@ -109,7 +110,7 @@ class ITURadioMaterial(RadioMaterial):
         if itu_type not in ITU_MATERIALS_PROPERTIES:
             raise ValueError(f"Invalid ITU material type \"{itu_type}\"")
         self._itu_type = itu_type
-        self._forced_range = forced_range
+        self.forced_freq_range = forced_freq_range
 
         # Order of priority to set the visual color of this ITU material:
         # 1. `color` keyword argument
@@ -127,7 +128,7 @@ class ITURadioMaterial(RadioMaterial):
 
         # Frequency update callback
         def cb(f: float):
-            return itu_material(itu_type, f, self._forced_range)
+            return itu_material(itu_type, f, self.forced_freq_range)
 
         if has_props:
             super().__init__(scattering_pattern=scattering_pattern,
@@ -163,11 +164,11 @@ class ITURadioMaterial(RadioMaterial):
 
         :type: :py:class:`tuple` [:py:class:`float`, :py:class:`float`] | :py:class:`None`
         """
-        return self._forced_range
+        return self.forced_freq_range
 
     @forced_range.setter
     def forced_range(self, value):
-        self._forced_range = value
+        self.forced_freq_range = value
         self.frequency_update()
 
     def to_string(self) -> str:
