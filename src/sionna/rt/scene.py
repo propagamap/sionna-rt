@@ -550,7 +550,8 @@ class Scene:
         rm_vmin: float | None = None,
         rm_cmap: str | callable | None = None,
         show_devices: bool = True,
-        show_orientations: bool = False
+        show_orientations: bool = False,
+        interior: bool = False
     ) -> plt.Figure | mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive viewer
@@ -622,6 +623,10 @@ class Scene:
         :param show_devices: Show radio devices
 
         :param show_orientations: Show orientation of radio devices
+
+        :param interior: If `True`, adds area lights around the camera
+            position to illuminate interior scenes (e.g. rooms enclosed
+            by walls). Defaults to `False`.
         """
         image = render(
             scene=self,
@@ -642,7 +647,8 @@ class Scene:
             resolution=resolution,
             fov=fov,
             envmap=envmap,
-            lighting_scale=lighting_scale
+            lighting_scale=lighting_scale,
+            interior=interior,
         )
         if return_bitmap:
             return image
@@ -710,7 +716,8 @@ class Scene:
         rm_vmin: float | None=None,
         rm_vmax: float | None=None,
         show_devices: bool=True,
-        show_orientations: bool=True
+        show_orientations: bool=True,
+        interior: bool = False
     ) -> mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive
@@ -775,6 +782,10 @@ class Scene:
         :param show_devices: Show radio devices
 
         :param show_orientations: Show orientation of radio devices
+
+        :param interior: If `True`, adds area lights around the camera
+            position to illuminate interior scenes (e.g. rooms enclosed
+            by walls). Defaults to `False`.
         """
         image = render(
             scene=self,
@@ -794,7 +805,8 @@ class Scene:
             resolution=resolution,
             fov=fov,
             envmap=envmap,
-            lighting_scale=lighting_scale
+            lighting_scale=lighting_scale,
+            interior=interior,
         )
 
         ext = os.path.splitext(filename)[1].lower()
