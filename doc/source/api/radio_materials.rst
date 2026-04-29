@@ -74,6 +74,24 @@ the frequency is set through the scene's property :class:`~sionna.rt.Scene.frequ
 Moreover, by default, the scattering coefficient, :math:`S`, of these materials is set to
 0, leading to no diffuse reflection.
 
+.. note::
+
+   **Out-of-range frequency behaviour.**
+   When the operating frequency falls outside all defined ranges for a given
+   material, Sionna uses the parameters of the nearest range (by boundary
+   distance) rather than raising an error. This allows simulations at
+   frequencies slightly outside the ITU-specified intervals.
+
+   The three ground materials — ``very_dry_ground``, ``medium_dry_ground``,
+   and ``wet_ground`` — are an exception: they are defined only over
+   1 -- 10 GHz, and a :py:exc:`ValueError` is raised if the frequency is
+   outside this interval.
+
+   When a material has multiple overlapping frequency ranges (e.g.
+   ``plasterboard`` at 150 GHz matches both the 110 -- 330 GHz and the
+   100 -- 400 GHz entries), the :attr:`~sionna.rt.ITURadioMaterial.forced_range`
+   property can be used to explicitly select which range's parameters to apply.
+
 +---------------------------+------------------------------------+--------------------------+-----------------------+
 | Material type             | Real part of relative permittivity | Conductivity [S/m]       | Frequency range (GHz) |
 +                           +-------------------+----------------+---------------+----------+                       +
