@@ -36,7 +36,8 @@ def render(scene: rt.Scene,
            rm_vmax: float | None = None,
            rm_metric: str = "path_gain",
            envmap: str | None = None,
-           lighting_scale: float = 1.0) -> mi.Bitmap:
+           lighting_scale: float = 1.0,
+           interior: bool = False) -> mi.Bitmap:
     r"""
     Renders two images with path tracing:
     1. Base scene with the meshes
@@ -131,6 +132,12 @@ def render(scene: rt.Scene,
         Scale to apply to the lighting in the scene (whether from a constant
         uniform emitter or a given environment map).
 
+    interior: bool     
+         If `True`, adds area lights around the camera
+        position to illuminate interior scenes (e.g. rooms enclosed
+        by walls). 
+        Defaults to `False`.
+
     Output
     -------
     : :class:`~mitsuba.Bitmap`
@@ -162,7 +169,8 @@ def render(scene: rt.Scene,
             scene, sensor=sensor, max_depth=max_depth,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
-            exclude_mesh_ids=exclude_mesh_ids
+            exclude_mesh_ids=exclude_mesh_ids,
+            interior=interior,
         )
         visual_scene = mi.load_dict(visual_scene)
 
@@ -250,7 +258,8 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      clip_plane_orientation: tuple[float, float, float] = (0, 0, -1),
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
-                                     exclude_mesh_ids: set[str] = None) -> dict:
+                                     exclude_mesh_ids: set[str] = None,
+                                     interior: bool = False) -> dict:
     if dr.size_v(mi.Spectrum) != 3:
         raise ValueError("This function is expected to be run using a" +
                          " rendering-focused Mitsuba variant such as" +
@@ -303,6 +312,37 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
             }
         }
     result["emitter"] = emitter
+
+    # Add area lights around the camera position so that interior scenes
+    # (camera inside a closed mesh) are not black due to environment occlusion.
+    if interior:
+        cam_pos = np.array(sensor.world_transform().translation()).reshape(-1)[:3]
+        diag = float(np.linalg.norm(bbox.extents()))
+        # Spread: fraction of diagonal so lights cover the room but stay near camera.
+        spread = max(diag * 0.15, 0.3)
+        light_radius = max(diag * 0.06, 0.1)
+        # Radiance tuned so illuminance ≈ 1 over typical room distances.
+        radiance = lighting_scale * max(diag / 4.0, 1.0)
+        # Four lights in a horizontal ring around the camera.
+        offsets = [( spread,  0.0),
+                   (-spread,  0.0),
+                   ( 0.0,  spread),
+                   ( 0.0, -spread)]
+        for i, (dx, dy) in enumerate(offsets):
+            result[f"interior_light_{i}"] = {
+                "type": "sphere",
+                "center": [float(cam_pos[0]) + dx,
+                            float(cam_pos[1]) + dy,
+                            float(cam_pos[2])],
+                "radius": light_radius,
+                "emitter": {
+                    "type": "area",
+                    "radiance": {
+                        "type": "rgb",
+                        "value": [radiance, radiance, radiance],
+                    },
+                },
+            }
 
     # --- Visual BSDFs
     bsdfs = {}
