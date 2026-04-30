@@ -39,6 +39,7 @@ extensions = ["sphinx_rtd_theme",
               "sphinxcontrib.bibtex",
               "_ext.list_registry",
              ]
+bibtex_bibfiles = ['rt.bib']
 autodoc_typehints = "description"
 typehints_fully_qualified = True
 simplify_optional_unions = True
