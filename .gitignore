@@ -1,9 +1,0 @@
-build/
-dist/
-*.pyc
-__pycache__/
-*.egg
-*.egg-info/
-.eggs/
-.ipynb_checkpoints
-*.nsys-rep

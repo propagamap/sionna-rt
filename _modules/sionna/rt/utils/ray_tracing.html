@@ -1,0 +1,926 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sionna.rt.utils.ray_tracing &mdash; Sionna RT 2.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/sionna.css?v=fecd2064" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=f5cff4aa"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Sionna RT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Introduction.html">Introduction to Sionna RT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Loading-and-Visualizing-Scenes">Loading and Visualizing Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Inspecting-SceneObjects-and-Editing-of-Scenes">Inspecting SceneObjects and Editing of Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Ray-tracing-of-Propagation-Paths">Ray tracing of Propagation Paths</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#From-Paths-to-Channel-Impulse-and-Frequency-Responses">From Paths to Channel Impulse and Frequency Responses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Radio-Maps">Radio Maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Introduction.html#Summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Diffraction.html">Tutorial on Diffraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Table-of-Contents">Table of Contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Background-Information">Background Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Wedge-vs-Edge">Wedge vs Edge</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Configuration-and-Imports">Configuration and Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Experiments-with-a-Simple-Wedge">Experiments with a Simple Wedge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#Coverage-Maps-with-Diffraction">Coverage Maps with Diffraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Diffraction.html#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Mobility.html">Tutorial on Mobility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Background-Information">Background Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Configuration-and-Imports">Configuration and Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Controlling-Position-and-Orientation-of-Scene-Objects">Controlling Position and Orientation of Scene Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Time-Evolution-of-Channels-Via-Doppler-Shift">Time Evolution of Channels Via Doppler Shift</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Mobility.html#Example:-Delay-Doppler-Spectrum">Example: Delay-Doppler Spectrum</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Comparison-of-Doppler--vs-Position-based-Time-Evolution">Comparison of Doppler- vs Position-based Time Evolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Mobility.html#Summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html">Tutorial on Radio Maps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Understanding-radio-maps">Understanding radio maps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Metrics">Metrics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Multiple-transmitters">Multiple transmitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#User-association">User association</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Sampling-of-random-user-positions">Sampling of random user positions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Directional-antennas-and-precoding-vectors">Directional antennas and precoding vectors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Radio-map-for-a-realistic-scene">Radio map for a realistic scene</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Channel-impulse-responses-for-random-user-locations">Channel impulse responses for random user locations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Radio-maps-on-meshes">Radio maps on meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Radio-Maps.html#Conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Scattering.html">Tutorial on Scattering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Scattering-Basics">Scattering Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Scattering-Patterns">Scattering Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Validation-Against-the-%22Far%22-Wall-Approximation">Validation Against the “Far”-Wall Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Radio-Maps-With-Scattering">Radio Maps With Scattering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Impact-on-Channel-Impulse-Response">Impact on Channel Impulse Response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#Summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scattering.html#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html">Tutorial on Loading and Editing of Scenes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html#Loading-Scenes-and-Merging-Objects">Loading Scenes and Merging Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html#Editing-Scenes">Editing Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html#Path-Computation-with-the-Edited-Scene">Path Computation with the Edited Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/Scene-Edit.html#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../em_primer.html">Primer on Electromagnetics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#coordinate-system-rotations-and-vector-fields">Coordinate system, rotations, and vector fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#planar-time-harmonic-waves">Planar Time-Harmonic Waves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#far-field-of-a-transmitting-antenna">Far Field of a Transmitting Antenna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#modelling-of-a-receiving-antenna">Modelling of a Receiving Antenna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#general-propagation-path">General Propagation Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#frequency-impulse-response">Frequency &amp; Impulse Response</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#reflection-and-refraction">Reflection and Refraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../em_primer.html#single-layer-slab">Single-layer Slab</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#diffraction">Diffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#scattering">Scattering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../em_primer.html#reconfigurable-intelligent-surfaces-ris">Reconfigurable Intelligent Surfaces (RIS)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/rt.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/antenna_array.html">Antenna Arrays</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray"><code class="docutils literal notranslate"><span class="pre">AntennaArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.antenna_pattern"><code class="docutils literal notranslate"><span class="pre">AntennaArray.antenna_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.array_size"><code class="docutils literal notranslate"><span class="pre">AntennaArray.array_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.normalized_positions"><code class="docutils literal notranslate"><span class="pre">AntennaArray.normalized_positions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.num_ant"><code class="docutils literal notranslate"><span class="pre">AntennaArray.num_ant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.positions"><code class="docutils literal notranslate"><span class="pre">AntennaArray.positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.AntennaArray.rotate"><code class="docutils literal notranslate"><span class="pre">AntennaArray.rotate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray"><code class="docutils literal notranslate"><span class="pre">PlanarArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.antenna_pattern"><code class="docutils literal notranslate"><span class="pre">PlanarArray.antenna_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.array_size"><code class="docutils literal notranslate"><span class="pre">PlanarArray.array_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.normalized_positions"><code class="docutils literal notranslate"><span class="pre">PlanarArray.normalized_positions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.num_ant"><code class="docutils literal notranslate"><span class="pre">PlanarArray.num_ant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.positions"><code class="docutils literal notranslate"><span class="pre">PlanarArray.positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.rotate"><code class="docutils literal notranslate"><span class="pre">PlanarArray.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_array.html#sionna.rt.PlanarArray.show"><code class="docutils literal notranslate"><span class="pre">PlanarArray.show()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/antenna_pattern.html">Antenna Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.AntennaPattern"><code class="docutils literal notranslate"><span class="pre">AntennaPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.AntennaPattern.compute_gain"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.compute_gain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.AntennaPattern.patterns"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.patterns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.AntennaPattern.show"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.compute_gain"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.compute_gain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.patterns"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.patterns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.show"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_pattern.html#vertically-polarized-antenna-pattern-functions">Vertically Polarized Antenna Pattern Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_iso_pattern"><code class="docutils literal notranslate"><span class="pre">v_iso_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_dipole_pattern"><code class="docutils literal notranslate"><span class="pre">v_dipole_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_hw_dipole_pattern"><code class="docutils literal notranslate"><span class="pre">v_hw_dipole_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_tr38901_pattern"><code class="docutils literal notranslate"><span class="pre">v_tr38901_pattern()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_pattern.html#polarization-models">Polarization Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.polarization_model_tr38901_1"><code class="docutils literal notranslate"><span class="pre">polarization_model_tr38901_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.polarization_model_tr38901_2"><code class="docutils literal notranslate"><span class="pre">polarization_model_tr38901_2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/antenna_pattern.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.antenna_pattern_to_world_implicit"><code class="docutils literal notranslate"><span class="pre">antenna_pattern_to_world_implicit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.antenna_pattern.complex2real_antenna_pattern"><code class="docutils literal notranslate"><span class="pre">complex2real_antenna_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.register_antenna_pattern"><code class="docutils literal notranslate"><span class="pre">register_antenna_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.register_polarization"><code class="docutils literal notranslate"><span class="pre">register_polarization()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/antenna_pattern.html#sionna.rt.register_polarization_model"><code class="docutils literal notranslate"><span class="pre">register_polarization_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/camera.html">Cameras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/camera.html#sionna.rt.Camera"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/camera.html#sionna.rt.Camera.look_at"><code class="docutils literal notranslate"><span class="pre">Camera.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/camera.html#sionna.rt.Camera.orientation"><code class="docutils literal notranslate"><span class="pre">Camera.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/camera.html#sionna.rt.Camera.position"><code class="docutils literal notranslate"><span class="pre">Camera.position</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/paths.html">Paths</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths"><code class="docutils literal notranslate"><span class="pre">Paths</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.a"><code class="docutils literal notranslate"><span class="pre">Paths.a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.cfr"><code class="docutils literal notranslate"><span class="pre">Paths.cfr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.cir"><code class="docutils literal notranslate"><span class="pre">Paths.cir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.doppler"><code class="docutils literal notranslate"><span class="pre">Paths.doppler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.interactions"><code class="docutils literal notranslate"><span class="pre">Paths.interactions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.num_rx"><code class="docutils literal notranslate"><span class="pre">Paths.num_rx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.num_tx"><code class="docutils literal notranslate"><span class="pre">Paths.num_tx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.objects"><code class="docutils literal notranslate"><span class="pre">Paths.objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.phi_r"><code class="docutils literal notranslate"><span class="pre">Paths.phi_r</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.phi_t"><code class="docutils literal notranslate"><span class="pre">Paths.phi_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.primitives"><code class="docutils literal notranslate"><span class="pre">Paths.primitives</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.rx_array"><code class="docutils literal notranslate"><span class="pre">Paths.rx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.sources"><code class="docutils literal notranslate"><span class="pre">Paths.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.synthetic_array"><code class="docutils literal notranslate"><span class="pre">Paths.synthetic_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.taps"><code class="docutils literal notranslate"><span class="pre">Paths.taps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.targets"><code class="docutils literal notranslate"><span class="pre">Paths.targets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.tau"><code class="docutils literal notranslate"><span class="pre">Paths.tau</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.theta_r"><code class="docutils literal notranslate"><span class="pre">Paths.theta_r</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.theta_t"><code class="docutils literal notranslate"><span class="pre">Paths.theta_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.tx_array"><code class="docutils literal notranslate"><span class="pre">Paths.tx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.valid"><code class="docutils literal notranslate"><span class="pre">Paths.valid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.Paths.vertices"><code class="docutils literal notranslate"><span class="pre">Paths.vertices</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/paths.html#constants">Constants</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType"><code class="docutils literal notranslate"><span class="pre">InteractionType</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType.DIFFRACTION"><code class="docutils literal notranslate"><span class="pre">InteractionType.DIFFRACTION</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType.DIFFUSE"><code class="docutils literal notranslate"><span class="pre">InteractionType.DIFFUSE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType.NONE"><code class="docutils literal notranslate"><span class="pre">InteractionType.NONE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType.REFRACTION"><code class="docutils literal notranslate"><span class="pre">InteractionType.REFRACTION</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.InteractionType.SPECULAR"><code class="docutils literal notranslate"><span class="pre">InteractionType.SPECULAR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.INVALID_SHAPE"><code class="docutils literal notranslate"><span class="pre">INVALID_SHAPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths.html#sionna.rt.constants.INVALID_PRIMITIVE"><code class="docutils literal notranslate"><span class="pre">INVALID_PRIMITIVE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/paths_solvers.html">Path Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/paths_solvers.html#sionna.rt.PathSolver"><code class="docutils literal notranslate"><span class="pre">PathSolver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths_solvers.html#sionna.rt.PathSolver.__call__"><code class="docutils literal notranslate"><span class="pre">PathSolver.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/paths_solvers.html#sionna.rt.PathSolver.loop_mode"><code class="docutils literal notranslate"><span class="pre">PathSolver.loop_mode</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/radio_devices.html">Radio Devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice"><code class="docutils literal notranslate"><span class="pre">RadioDevice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.color"><code class="docutils literal notranslate"><span class="pre">RadioDevice.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.display_radius"><code class="docutils literal notranslate"><span class="pre">RadioDevice.display_radius</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.look_at"><code class="docutils literal notranslate"><span class="pre">RadioDevice.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.name"><code class="docutils literal notranslate"><span class="pre">RadioDevice.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.orientation"><code class="docutils literal notranslate"><span class="pre">RadioDevice.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.position"><code class="docutils literal notranslate"><span class="pre">RadioDevice.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.RadioDevice.velocity"><code class="docutils literal notranslate"><span class="pre">RadioDevice.velocity</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.Receiver"><code class="docutils literal notranslate"><span class="pre">Receiver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.Transmitter"><code class="docutils literal notranslate"><span class="pre">Transmitter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.Transmitter.power"><code class="docutils literal notranslate"><span class="pre">Transmitter.power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_devices.html#sionna.rt.Transmitter.power_dbm"><code class="docutils literal notranslate"><span class="pre">Transmitter.power_dbm</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/radio_maps.html">Radio Maps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.cell_size"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cell_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.cells_per_dim"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cells_per_dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.center"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.center</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.orientation"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.rx_cell_indices"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.rx_cell_indices</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.sample_positions"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.sample_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.show"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.show_association"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.show_association()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.size"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.tx_association"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.tx_association()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.PlanarRadioMap.tx_cell_indices"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.tx_cell_indices</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.MeshRadioMap.sample_positions"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.sample_positions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap"><code class="docutils literal notranslate"><span class="pre">RadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">RadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.cdf"><code class="docutils literal notranslate"><span class="pre">RadioMap.cdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">RadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">RadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">RadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.transmitter_radio_map"><code class="docutils literal notranslate"><span class="pre">RadioMap.transmitter_radio_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.tx_association"><code class="docutils literal notranslate"><span class="pre">RadioMap.tx_association()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/radio_map_solvers.html">Radio Map Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_map_solvers.html#sionna.rt.RadioMapSolver"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_map_solvers.html#sionna.rt.RadioMapSolver.__call__"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_map_solvers.html#sionna.rt.RadioMapSolver.loop_mode"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver.loop_mode</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/radio_materials.html">Radio Materials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.color"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.eval"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.eval()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.name"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.pdf"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.pdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.sample"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.scene"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.to_string"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterialBase.traverse"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.traverse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial"><code class="docutils literal notranslate"><span class="pre">RadioMaterial</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.conductivity"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.conductivity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.frequency_update"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.frequency_update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.frequency_update_callback"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.frequency_update_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.relative_permittivity"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.relative_permittivity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.scattering_coefficient"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.scattering_coefficient</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.scattering_pattern"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.scattering_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.thickness"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.thickness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.RadioMaterial.xpd_coefficient"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.xpd_coefficient</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ITURadioMaterial"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ITURadioMaterial.itu_type"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial.itu_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ITURadioMaterial.to_string"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial.to_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/radio_materials.html#scattering-patterns">Scattering Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ScatteringPattern"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ScatteringPattern.__call__"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.ScatteringPattern.show"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.LambertianPattern"><code class="docutils literal notranslate"><span class="pre">LambertianPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.LambertianPattern.__call__"><code class="docutils literal notranslate"><span class="pre">LambertianPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.LambertianPattern.show"><code class="docutils literal notranslate"><span class="pre">LambertianPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.DirectivePattern"><code class="docutils literal notranslate"><span class="pre">DirectivePattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.DirectivePattern.__call__"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.DirectivePattern.alpha_r"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.alpha_r</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.DirectivePattern.show"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern.__call__"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern.alpha_i"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.alpha_i</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern.alpha_r"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.alpha_r</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern.lambda_"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.lambda_</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.BackscatteringPattern.show"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_materials.html#sionna.rt.register_scattering_pattern"><code class="docutils literal notranslate"><span class="pre">register_scattering_pattern()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/scene.html">Scenes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.load_scene"><code class="docutils literal notranslate"><span class="pre">load_scene()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.all_set"><code class="docutils literal notranslate"><span class="pre">Scene.all_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.angular_frequency"><code class="docutils literal notranslate"><span class="pre">Scene.angular_frequency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.bandwidth"><code class="docutils literal notranslate"><span class="pre">Scene.bandwidth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.edit"><code class="docutils literal notranslate"><span class="pre">Scene.edit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.frequency"><code class="docutils literal notranslate"><span class="pre">Scene.frequency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.get"><code class="docutils literal notranslate"><span class="pre">Scene.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.mi_scene"><code class="docutils literal notranslate"><span class="pre">Scene.mi_scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.mi_scene_params"><code class="docutils literal notranslate"><span class="pre">Scene.mi_scene_params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.objects"><code class="docutils literal notranslate"><span class="pre">Scene.objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.paths_solver"><code class="docutils literal notranslate"><span class="pre">Scene.paths_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.preview"><code class="docutils literal notranslate"><span class="pre">Scene.preview()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.radio_materials"><code class="docutils literal notranslate"><span class="pre">Scene.radio_materials</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.receivers"><code class="docutils literal notranslate"><span class="pre">Scene.receivers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.remove"><code class="docutils literal notranslate"><span class="pre">Scene.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.render_to_file"><code class="docutils literal notranslate"><span class="pre">Scene.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.rx_array"><code class="docutils literal notranslate"><span class="pre">Scene.rx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.scene_geometry_updated"><code class="docutils literal notranslate"><span class="pre">Scene.scene_geometry_updated()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.sources"><code class="docutils literal notranslate"><span class="pre">Scene.sources()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.targets"><code class="docutils literal notranslate"><span class="pre">Scene.targets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.temperature"><code class="docutils literal notranslate"><span class="pre">Scene.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.thermal_noise_power"><code class="docutils literal notranslate"><span class="pre">Scene.thermal_noise_power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.transmitters"><code class="docutils literal notranslate"><span class="pre">Scene.transmitters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.tx_array"><code class="docutils literal notranslate"><span class="pre">Scene.tx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.wavelength"><code class="docutils literal notranslate"><span class="pre">Scene.wavelength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.Scene.wavenumber"><code class="docutils literal notranslate"><span class="pre">Scene.wavenumber</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/scene.html#built-in-scenes">Built-in scenes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.box"><code class="docutils literal notranslate"><span class="pre">box</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.box_one_screen"><code class="docutils literal notranslate"><span class="pre">box_one_screen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.box_two_screens"><code class="docutils literal notranslate"><span class="pre">box_two_screens</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.double_reflector"><code class="docutils literal notranslate"><span class="pre">double_reflector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.etoile"><code class="docutils literal notranslate"><span class="pre">etoile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.floor_wall"><code class="docutils literal notranslate"><span class="pre">floor_wall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.florence"><code class="docutils literal notranslate"><span class="pre">florence</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.munich"><code class="docutils literal notranslate"><span class="pre">munich</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.san_francisco"><code class="docutils literal notranslate"><span class="pre">san_francisco</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.simple_reflector"><code class="docutils literal notranslate"><span class="pre">simple_reflector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.simple_street_canyon"><code class="docutils literal notranslate"><span class="pre">simple_street_canyon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.simple_street_canyon_with_cars"><code class="docutils literal notranslate"><span class="pre">simple_street_canyon_with_cars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.simple_wedge"><code class="docutils literal notranslate"><span class="pre">simple_wedge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.triple_reflector"><code class="docutils literal notranslate"><span class="pre">triple_reflector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/scene.html#built-in-meshes">Built-in meshes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.low_poly_car"><code class="docutils literal notranslate"><span class="pre">low_poly_car</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene.html#sionna.rt.scene.sphere"><code class="docutils literal notranslate"><span class="pre">sphere</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/scene_object.html">Scene Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject"><code class="docutils literal notranslate"><span class="pre">SceneObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.clone"><code class="docutils literal notranslate"><span class="pre">SceneObject.clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.look_at"><code class="docutils literal notranslate"><span class="pre">SceneObject.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.mi_mesh"><code class="docutils literal notranslate"><span class="pre">SceneObject.mi_mesh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.name"><code class="docutils literal notranslate"><span class="pre">SceneObject.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.object_id"><code class="docutils literal notranslate"><span class="pre">SceneObject.object_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.orientation"><code class="docutils literal notranslate"><span class="pre">SceneObject.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.position"><code class="docutils literal notranslate"><span class="pre">SceneObject.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.radio_material"><code class="docutils literal notranslate"><span class="pre">SceneObject.radio_material</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.scaling"><code class="docutils literal notranslate"><span class="pre">SceneObject.scaling</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.scene"><code class="docutils literal notranslate"><span class="pre">SceneObject.scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/scene_object.html#sionna.rt.SceneObject.velocity"><code class="docutils literal notranslate"><span class="pre">SceneObject.velocity</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/utils.html">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#complex-valued-tensors">Complex-valued tensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_abs"><code class="docutils literal notranslate"><span class="pre">cpx_abs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_abs_square"><code class="docutils literal notranslate"><span class="pre">cpx_abs_square()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_add"><code class="docutils literal notranslate"><span class="pre">cpx_add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_convert"><code class="docutils literal notranslate"><span class="pre">cpx_convert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_div"><code class="docutils literal notranslate"><span class="pre">cpx_div()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_exp"><code class="docutils literal notranslate"><span class="pre">cpx_exp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_mul"><code class="docutils literal notranslate"><span class="pre">cpx_mul()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_sqrt"><code class="docutils literal notranslate"><span class="pre">cpx_sqrt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.cpx_sub"><code class="docutils literal notranslate"><span class="pre">cpx_sub()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#electromagnetics">Electromagnetics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.complex_relative_permittivity"><code class="docutils literal notranslate"><span class="pre">complex_relative_permittivity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.fresnel"><code class="docutils literal notranslate"><span class="pre">fresnel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.f_utd"><code class="docutils literal notranslate"><span class="pre">f_utd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.fresnel_reflection_coefficients_simplified"><code class="docutils literal notranslate"><span class="pre">fresnel_reflection_coefficients_simplified()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.itu_coefficients_single_layer_slab"><code class="docutils literal notranslate"><span class="pre">itu_coefficients_single_layer_slab()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#geometry">Geometry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.phi_hat"><code class="docutils literal notranslate"><span class="pre">phi_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.theta_hat"><code class="docutils literal notranslate"><span class="pre">theta_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.r_hat"><code class="docutils literal notranslate"><span class="pre">r_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.theta_phi_from_unit_vec"><code class="docutils literal notranslate"><span class="pre">theta_phi_from_unit_vec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.rotation_matrix"><code class="docutils literal notranslate"><span class="pre">rotation_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#jones-calculus">Jones calculus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.implicit_basis_vector"><code class="docutils literal notranslate"><span class="pre">implicit_basis_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.jones_matrix_rotator"><code class="docutils literal notranslate"><span class="pre">jones_matrix_rotator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.jones_matrix_rotator_flip_forward"><code class="docutils literal notranslate"><span class="pre">jones_matrix_rotator_flip_forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.to_world_jones_rotator"><code class="docutils literal notranslate"><span class="pre">to_world_jones_rotator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.jones_matrix_to_world_implicit"><code class="docutils literal notranslate"><span class="pre">jones_matrix_to_world_implicit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.jones_vec_dot"><code class="docutils literal notranslate"><span class="pre">jones_vec_dot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#meshes">Meshes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.load_mesh"><code class="docutils literal notranslate"><span class="pre">load_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.transform_mesh"><code class="docutils literal notranslate"><span class="pre">transform_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#miscellaneous">Miscellaneous</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.complex_sqrt"><code class="docutils literal notranslate"><span class="pre">complex_sqrt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.dbm_to_watt"><code class="docutils literal notranslate"><span class="pre">dbm_to_watt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.isclose"><code class="docutils literal notranslate"><span class="pre">isclose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.log10"><code class="docutils literal notranslate"><span class="pre">log10()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.sigmoid"><code class="docutils literal notranslate"><span class="pre">sigmoid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.sinc"><code class="docutils literal notranslate"><span class="pre">sinc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.subcarrier_frequencies"><code class="docutils literal notranslate"><span class="pre">subcarrier_frequencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.watt_to_dbm"><code class="docutils literal notranslate"><span class="pre">watt_to_dbm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/utils.html#ray-tracing">Ray tracing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.fibonacci_lattice"><code class="docutils literal notranslate"><span class="pre">fibonacci_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_from_sources"><code class="docutils literal notranslate"><span class="pre">spawn_ray_from_sources()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.offset_p"><code class="docutils literal notranslate"><span class="pre">offset_p()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_towards"><code class="docutils literal notranslate"><span class="pre">spawn_ray_towards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_to"><code class="docutils literal notranslate"><span class="pre">spawn_ray_to()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer/developer.html">Developer Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developer/dev_compat_frameworks.html">Compatibility with other Frameworks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_compat_frameworks.html#type-conversions">Type conversions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_compat_frameworks.html#gradients">Gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_compat_frameworks.html#training-loop-in-pytorch">Training-Loop in PyTorch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developer/dev_understanding_paths.html">Understanding the Paths Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developer/dev_custom_antenna_patterns.html">Custom Antenna Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_custom_antenna_patterns.html#gradient-based-optimization">Gradient-based Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html">Understanding Radio Materials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#modifying-parameters-of-radio-materials">Modifying Parameters of Radio Materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#calibrating-material-parameters-through-gradient-descent">Calibrating Material Parameters Through Gradient Descent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#custom-radio-materials">Custom Radio Materials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#representation-of-jones-vector-and-matrices">Representation of Jones vector and Matrices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#implicit-basis">Implicit Basis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#the-local-interaction-basis">The Local Interaction Basis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#mandatory-subclass-methods">Mandatory Subclass Methods</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#sample"><cite>sample()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#eval"><cite>eval()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#pdf"><cite>pdf()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#traverse"><cite>traverse()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#to-string"><cite>to_string()</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#implementation-of-a-simple-radio-material-model">Implementation of a Simple Radio Material Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../developer/dev_custom_radio_materials.html#a-more-complex-material-model">A More Complex Material Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developer/dev_custom_scattering_patterns.html">Custom Scattering Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../developer/dev_custom_scattering_patterns.html#differentiable-parameters">Differentiable Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://nvlabs.github.io/sionna/rt/tech-report/index.html">Technical Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../rt_gui.html">Sionna RT GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVlabs/sionna-rt">Get the Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Sionna RT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sionna.rt.utils.ray_tracing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sionna.rt.utils.ray_tracing</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># SPDX-FileCopyrightText: Copyright (c) 2021-2026 NVIDIA CORPORATION &amp; AFFILIATES. All rights reserved.</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;Utilities for ray tracing&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">drjit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mitsuba</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sionna.rt.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">EPSILON_FLOAT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sionna.rt.utils.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">rotate_vector_around_axis</span><span class="p">,</span>\
+    <span class="n">theta_phi_from_unit_vec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sionna.rt.utils.wedges</span><span class="w"> </span><span class="kn">import</span> <span class="n">wedge_interior_angle</span>
+
+<div class="viewcode-block" id="fibonacci_lattice">
+<a class="viewcode-back" href="../../../../api/utils.html#sionna.rt.utils.fibonacci_lattice">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fibonacci_lattice</span><span class="p">(</span><span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point2f</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a Fibonacci lattice of size ``num_points`` on the unit square</span>
+<span class="sd">    :math:`[0, 1] \times [0, 1]`</span>
+
+<span class="sd">    :param num_points: Size of the lattice</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">golden_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">dr</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">Float64</span><span class="p">(</span><span class="mf">5.</span><span class="p">)))</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">Float64</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ns</span><span class="o">/</span><span class="n">golden_ratio</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">dr</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">ns</span><span class="o">/</span><span class="p">(</span><span class="n">num_points</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point2f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="spawn_ray_from_sources">
+<a class="viewcode-back" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_from_sources">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spawn_ray_from_sources</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point2f</span><span class="p">],</span>
+    <span class="n">samples_per_src</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">src_positions</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spawns ``samples_per_src`` rays for each source at the positions specified</span>
+<span class="sd">    by ``src_positions``, oriented in the directions defined by the ``lattice``</span>
+
+<span class="sd">    The spawned rays are ordered samples-first.</span>
+
+<span class="sd">    :param lattice: Callable that generates the lattice used as directions for</span>
+<span class="sd">        the rays</span>
+<span class="sd">    :param samples_per_src: Number of rays per source to spawn</span>
+<span class="sd">    :param src_positions: Positions of the sources</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">num_sources</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">src_positions</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Ray directions</span>
+    <span class="n">samples_on_square</span> <span class="o">=</span> <span class="n">lattice</span><span class="p">(</span><span class="n">samples_per_src</span><span class="p">)</span>
+    <span class="n">k_world</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">warp</span><span class="o">.</span><span class="n">square_to_uniform_sphere</span><span class="p">(</span><span class="n">samples_on_square</span><span class="p">)</span>
+
+    <span class="c1"># Samples-first ordering is used, i.e., the samples are ordered as</span>
+    <span class="c1"># follows:</span>
+    <span class="c1"># [source_0_samples..., source_1_samples..., ...]</span>
+    <span class="c1"># Each source has its own lattice</span>
+    <span class="n">k_world</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">k_world</span><span class="p">,</span> <span class="n">num_sources</span><span class="p">)</span>
+    <span class="c1"># Rays origins are the source locations</span>
+    <span class="n">origins</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">src_positions</span><span class="p">,</span> <span class="n">samples_per_src</span><span class="p">)</span>
+
+    <span class="c1"># Spawn rays from the sources</span>
+    <span class="n">ray</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">(</span><span class="n">o</span><span class="o">=</span><span class="n">origins</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">k_world</span><span class="p">)</span>
+    <span class="c1"># Minor workaround to avoid loop retracing due to size mismatch.</span>
+    <span class="n">ray</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">dr</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">k_world</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ray</span></div>
+
+
+<div class="viewcode-block" id="offset_p">
+<a class="viewcode-back" href="../../../../api/utils.html#sionna.rt.utils.offset_p">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">offset_p</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=line-too-long</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a small offset to :math:`\mathbf{p}` along :math:`\mathbf{n}` such that</span>
+<span class="sd">    :math:`\mathbf{n}^{\textsf{T}} \mathbf{d} \gt 0`</span>
+
+<span class="sd">    More precisely, this function returns :math:`\mathbf{o}` such that:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \mathbf{o} = \mathbf{p} + \epsilon\left(1 + \max{\left\{|p_x|,|p_y|,|p_z|\right\}}\right)\texttt{sign}(\mathbf{d} \cdot \mathbf{n})\mathbf{n}</span>
+
+<span class="sd">    where :math:`\epsilon` depends on the numerical precision and :math:`\mathbf{p} = (p_x,p_y,p_z)`.</span>
+
+<span class="sd">    :param p: Point to offset</span>
+<span class="sd">    :param d: Direction toward which to offset along ``n``</span>
+<span class="sd">    :param n: Direction along which to offset</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">dr</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">*</span> <span class="n">EPSILON_FLOAT</span>
+    <span class="c1"># Detach this operation to ensure these is no gradient computation</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">detach</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">mulsign</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">n</span><span class="p">)))</span>
+    <span class="n">po</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">fma</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">po</span></div>
+
+
+<div class="viewcode-block" id="spawn_ray_towards">
+<a class="viewcode-back" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_towards">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spawn_ray_towards</span><span class="p">(</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spawns a ray with infinite length from :math:`\mathbf{p}` toward</span>
+<span class="sd">    :math:`\mathbf{t}`</span>
+
+<span class="sd">    If :math:`\mathbf{n}` is not :py:class:`None`, then a small offset is added</span>
+<span class="sd">    to :math:`\mathbf{p}` along :math:`\mathbf{n}` in the direction of</span>
+<span class="sd">    :math:`\mathbf{t}`.</span>
+
+<span class="sd">    :param p: Origin of the ray</span>
+<span class="sd">    :param t: Point towards which to spawn the ray</span>
+<span class="sd">    :param n: (Optional) Direction along which to offset :math:`\mathbf{p}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Adds a small offset to `p` to avoid self-intersection</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">po</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">po</span> <span class="o">=</span> <span class="n">offset_p</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="c1"># Ray direction towards `t`</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">po</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">ray</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">(</span><span class="n">po</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="c1"># Small optimization to avoid loop retracing due to size mismatch.</span>
+    <span class="c1"># This is still a literal.</span>
+    <span class="n">ray</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">dr</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">d</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ray</span></div>
+
+
+<div class="viewcode-block" id="spawn_ray_to">
+<a class="viewcode-back" href="../../../../api/utils.html#sionna.rt.utils.spawn_ray_to">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spawn_ray_to</span><span class="p">(</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spawns a finite ray from :math:`\mathbf{p}` to :math:`\mathbf{t}`</span>
+
+<span class="sd">    The length of the ray is set to :math:`\|\mathbf{p} - \mathbf{t}\|`.</span>
+
+<span class="sd">    If :math:`\mathbf{n}` is not :py:class:`None`, then a small offset is added</span>
+<span class="sd">    to :math:`\mathbf{p}` along :math:`\mathbf{n}` in the direction of</span>
+<span class="sd">    :math:`\mathbf{t}`.</span>
+
+<span class="sd">    :param p: Origin of the ray</span>
+<span class="sd">    :param t: Point towards which to spawn the ray</span>
+<span class="sd">    :param n: (Optional) Direction along which to offset :math:`\mathbf{p}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Adds a small offset to `p`</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">po</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">po</span> <span class="o">=</span> <span class="n">offset_p</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="c1"># Ray direction towards `t`</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">po</span>
+    <span class="n">maxt</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">/=</span> <span class="n">maxt</span>
+    <span class="n">maxt</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">EPSILON_FLOAT</span><span class="p">)</span>
+    <span class="c1">#</span>
+    <span class="n">ray</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Ray3f</span><span class="p">(</span><span class="n">po</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span>  <span class="n">maxt</span><span class="o">=</span><span class="n">maxt</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">wavelengths</span><span class="o">=</span><span class="n">mi</span><span class="o">.</span><span class="n">Color0f</span><span class="p">())</span>
+    <span class="c1"># Small optimization to avoid loop retracing due to size mismatch.</span>
+    <span class="c1"># This is still a literal.</span>
+    <span class="n">ray</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span> <span class="n">dr</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">d</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">ray</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">first_order_diffraction_point</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+                                  <span class="n">t</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+                                  <span class="n">o</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Point3f</span><span class="p">,</span>
+                                  <span class="n">zeta</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=line-too-long</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the scalar the diffraction point on an edge for a</span>
+<span class="sd">    single-order diffracted path connecting a source and a target</span>
+
+<span class="sd">    This function determines the parameter :math:`x` that defines the position</span>
+<span class="sd">    on an edge where diffraction occurs for a ray path from source</span>
+<span class="sd">    :math:`\mathbf{s}` to target :math:`\mathbf{t}`. The edge is parameterized</span>
+<span class="sd">    as :math:`\mathbf{o} + x \boldsymbol{\zeta}`, where :math:`\mathbf{o}` is</span>
+<span class="sd">    the edge origin and :math:`\boldsymbol{\zeta}` is the normalized direction</span>
+<span class="sd">    vector.</span>
+
+
+<span class="sd">    :param s: Source position :math:`\mathbf{s}`</span>
+<span class="sd">    :param t: Target position :math:`\mathbf{t}`</span>
+<span class="sd">    :param o: Origin point of the edge :math:`\mathbf{o}`</span>
+<span class="sd">    :param zeta: Normalized direction vector of the edge :math:`\boldsymbol{\zeta}`</span>
+
+<span class="sd">    :return: Parameter :math:`x` defining the diffraction point position</span>
+<span class="sd">        :math:`\mathbf{o} + x \boldsymbol{\zeta}` on the edge</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">## Use edge origin as reference point</span>
+    <span class="n">to</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">o</span>
+    <span class="n">so</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="n">o</span>
+
+    <span class="c1">## Projection of the source and target on the edge</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="n">zeta</span><span class="p">)</span><span class="o">*</span><span class="n">zeta</span>
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">zeta</span><span class="p">)</span><span class="o">*</span><span class="n">zeta</span>
+
+    <span class="c1">## Rotate the target around the edge to be coplanar</span>
+    <span class="c1">## with the source and the edge</span>
+
+    <span class="c1"># Angle of rotation</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">to</span> <span class="o">-</span> <span class="n">tp</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">so</span> <span class="o">-</span> <span class="n">sp</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">dr</span><span class="o">.</span><span class="n">safe_acos</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+
+    <span class="c1"># Axis of rotation</span>
+    <span class="n">rot_axis</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">so</span> <span class="o">-</span> <span class="n">sp</span><span class="p">,</span> <span class="n">to</span> <span class="o">-</span> <span class="n">tp</span><span class="p">)</span>
+    <span class="n">rot_axis_norm</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">rot_axis</span><span class="p">)</span>
+    <span class="n">rot_axis</span> <span class="o">*=</span> <span class="n">dr</span><span class="o">.</span><span class="n">rcp</span><span class="p">(</span><span class="n">rot_axis_norm</span><span class="p">)</span>
+    <span class="n">rot_axis</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">rot_axis_norm</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rot_axis</span><span class="p">,</span> <span class="n">zeta</span><span class="p">)</span>
+
+    <span class="c1"># Apply the rotation</span>
+    <span class="n">tc</span> <span class="o">=</span> <span class="n">rotate_vector_around_axis</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">rot_axis</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+
+    <span class="c1">## Compute the diffraction point</span>
+
+    <span class="n">u0</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">tc</span> <span class="o">-</span> <span class="n">so</span><span class="p">)</span>
+    <span class="n">u1</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="n">u0</span><span class="p">)</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">zeta</span><span class="p">,</span> <span class="n">u0</span><span class="p">)</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">))</span>
+
+    <span class="c1"># Position of the diffraction point on the edge</span>
+    <span class="c1"># relative to the edge origin</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sign</span><span class="o">*</span><span class="n">dr</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span><span class="o">*</span><span class="n">dr</span><span class="o">.</span><span class="n">rcp</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_keller_cone</span><span class="p">(</span><span class="n">e_hat</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">,</span>
+                       <span class="n">n0</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">,</span>
+                       <span class="n">nn</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">,</span>
+                       <span class="n">sample</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Float</span><span class="p">,</span>
+                       <span class="n">ki</span><span class="p">:</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">,</span>
+                       <span class="n">lit_region</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Samples a direction on the Keller cone for diffraction</span>
+
+<span class="sd">    This function samples a diffracted ray direction on the Keller cone.</span>
+<span class="sd">    The Keller cone is such that the angle between the diffracted rays and</span>
+<span class="sd">    the edge direction is equal to the angle between the incident ray and</span>
+<span class="sd">    the edge direction.</span>
+
+<span class="sd">    :param e_hat: Normalized edge direction vector</span>
+<span class="sd">    :param n0: Normal to the 0-face</span>
+<span class="sd">    :param nn: Normal to the n-face</span>
+<span class="sd">    :param sample: Random sample in [0, 1) used for sampling the Keller cone</span>
+<span class="sd">    :param ki: Incident ray direction</span>
+<span class="sd">    :param lit_region: If set to `True`, then the lit region is sampled.</span>
+<span class="sd">        If set to `False`, then only the shadow region is sampled.</span>
+
+<span class="sd">    :return: Normalized direction vector of the diffracted ray in the</span>
+<span class="sd">        local coordinate system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Local coordinate system (t0, n0, e_fwd), where</span>
+    <span class="c1"># e_fwd is the edge direction oriented in the direction</span>
+    <span class="c1"># of the incident ray</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">e_hat</span><span class="p">))</span>
+    <span class="n">e_fwd</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e_hat</span><span class="p">,</span> <span class="n">ki</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                      <span class="n">e_hat</span><span class="p">,</span> <span class="o">-</span><span class="n">e_hat</span><span class="p">)</span>
+
+    <span class="c1"># k_i in local coordinate system</span>
+    <span class="n">ki_local</span> <span class="o">=</span> <span class="n">mi</span><span class="o">.</span><span class="n">Vector3f</span><span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ki</span><span class="p">,</span> <span class="n">t0</span><span class="p">),</span>
+                           <span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ki</span><span class="p">,</span> <span class="n">n0</span><span class="p">),</span>
+                           <span class="n">dr</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ki</span><span class="p">,</span> <span class="n">e_fwd</span><span class="p">))</span>
+
+    <span class="n">beta0</span><span class="p">,</span> <span class="n">phi_i</span> <span class="o">=</span> <span class="n">theta_phi_from_unit_vec</span><span class="p">(</span><span class="n">ki_local</span><span class="p">)</span>
+
+    <span class="c1"># Read the wedge opening angle</span>
+    <span class="n">wedge_angle</span> <span class="o">=</span> <span class="n">wedge_interior_angle</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">nn</span><span class="p">)</span>
+
+    <span class="c1"># Sample an angle on the Keller cone</span>
+    <span class="k">if</span> <span class="n">lit_region</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">sample</span> <span class="o">*</span> <span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">two_pi</span> <span class="o">-</span> <span class="n">wedge_angle</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Ensures that phi_i is in [0, 2*pi]</span>
+        <span class="n">phi_i</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">phi_i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">phi_i</span> <span class="o">+</span> <span class="n">dr</span><span class="o">.</span><span class="n">two_pi</span><span class="p">,</span> <span class="n">phi_i</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">phi_i</span> <span class="o">+</span> <span class="n">sample</span> <span class="o">*</span> <span class="p">(</span><span class="n">dr</span><span class="o">.</span><span class="n">two_pi</span> <span class="o">-</span> <span class="n">wedge_angle</span> <span class="o">-</span> <span class="n">phi_i</span><span class="p">)</span>
+
+
+    <span class="c1"># Direction of propagation of diffracted ray</span>
+    <span class="n">sin_beta0</span><span class="p">,</span> <span class="n">cos_beta0</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sincos</span><span class="p">(</span><span class="n">beta0</span><span class="p">)</span>
+    <span class="n">sin_phi</span><span class="p">,</span> <span class="n">cos_phi</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">sincos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">k_diffr</span> <span class="o">=</span> <span class="n">sin_phi</span><span class="o">*</span><span class="n">sin_beta0</span><span class="o">*</span><span class="n">n0</span> \
+        <span class="o">+</span> <span class="n">cos_phi</span><span class="o">*</span><span class="n">sin_beta0</span><span class="o">*</span><span class="n">t0</span> \
+        <span class="o">+</span> <span class="n">cos_beta0</span><span class="o">*</span><span class="n">e_fwd</span>
+
+    <span class="k">return</span> <span class="n">k_diffr</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2026 NVIDIA CORPORATION.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

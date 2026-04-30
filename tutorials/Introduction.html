@@ -1,0 +1,1207 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to Sionna RT &mdash; Sionna RT 2.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/sionna.css?v=fecd2064" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f5cff4aa"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial on Diffraction" href="Diffraction.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Sionna RT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction to Sionna RT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Loading-and-Visualizing-Scenes">Loading and Visualizing Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Inspecting-SceneObjects-and-Editing-of-Scenes">Inspecting SceneObjects and Editing of Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Ray-tracing-of-Propagation-Paths">Ray tracing of Propagation Paths</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#From-Paths-to-Channel-Impulse-and-Frequency-Responses">From Paths to Channel Impulse and Frequency Responses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Radio-Maps">Radio Maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Diffraction.html">Tutorial on Diffraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#Table-of-Contents">Table of Contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#Background-Information">Background Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Diffraction.html#Wedge-vs-Edge">Wedge vs Edge</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#Configuration-and-Imports">Configuration and Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#Experiments-with-a-Simple-Wedge">Experiments with a Simple Wedge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#Coverage-Maps-with-Diffraction">Coverage Maps with Diffraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Diffraction.html#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Mobility.html">Tutorial on Mobility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Background-Information">Background Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Configuration-and-Imports">Configuration and Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Controlling-Position-and-Orientation-of-Scene-Objects">Controlling Position and Orientation of Scene Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Time-Evolution-of-Channels-Via-Doppler-Shift">Time Evolution of Channels Via Doppler Shift</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Mobility.html#Example:-Delay-Doppler-Spectrum">Example: Delay-Doppler Spectrum</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Comparison-of-Doppler--vs-Position-based-Time-Evolution">Comparison of Doppler- vs Position-based Time Evolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mobility.html#Summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Radio-Maps.html">Tutorial on Radio Maps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Radio-Maps.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Radio-Maps.html#Understanding-radio-maps">Understanding radio maps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#Metrics">Metrics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#Multiple-transmitters">Multiple transmitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#User-association">User association</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#Sampling-of-random-user-positions">Sampling of random user positions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#Directional-antennas-and-precoding-vectors">Directional antennas and precoding vectors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Radio-Maps.html#Radio-map-for-a-realistic-scene">Radio map for a realistic scene</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Radio-Maps.html#Channel-impulse-responses-for-random-user-locations">Channel impulse responses for random user locations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Radio-Maps.html#Radio-maps-on-meshes">Radio maps on meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Radio-Maps.html#Conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Scattering.html">Tutorial on Scattering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Scattering-Basics">Scattering Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Scattering-Patterns">Scattering Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Validation-Against-the-%22Far%22-Wall-Approximation">Validation Against the “Far”-Wall Approximation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Radio-Maps-With-Scattering">Radio Maps With Scattering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Impact-on-Channel-Impulse-Response">Impact on Channel Impulse Response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#Summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scattering.html#References">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Scene-Edit.html">Tutorial on Loading and Editing of Scenes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scene-Edit.html#Imports">Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scene-Edit.html#Loading-Scenes-and-Merging-Objects">Loading Scenes and Merging Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scene-Edit.html#Editing-Scenes">Editing Scenes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scene-Edit.html#Path-Computation-with-the-Edited-Scene">Path Computation with the Edited Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scene-Edit.html#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../em_primer.html">Primer on Electromagnetics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#coordinate-system-rotations-and-vector-fields">Coordinate system, rotations, and vector fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#planar-time-harmonic-waves">Planar Time-Harmonic Waves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#far-field-of-a-transmitting-antenna">Far Field of a Transmitting Antenna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#modelling-of-a-receiving-antenna">Modelling of a Receiving Antenna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#general-propagation-path">General Propagation Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#frequency-impulse-response">Frequency &amp; Impulse Response</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#reflection-and-refraction">Reflection and Refraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../em_primer.html#single-layer-slab">Single-layer Slab</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#diffraction">Diffraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#scattering">Scattering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../em_primer.html#reconfigurable-intelligent-surfaces-ris">Reconfigurable Intelligent Surfaces (RIS)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rt.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/antenna_array.html">Antenna Arrays</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray"><code class="docutils literal notranslate"><span class="pre">AntennaArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.antenna_pattern"><code class="docutils literal notranslate"><span class="pre">AntennaArray.antenna_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.array_size"><code class="docutils literal notranslate"><span class="pre">AntennaArray.array_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.normalized_positions"><code class="docutils literal notranslate"><span class="pre">AntennaArray.normalized_positions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.num_ant"><code class="docutils literal notranslate"><span class="pre">AntennaArray.num_ant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.positions"><code class="docutils literal notranslate"><span class="pre">AntennaArray.positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.AntennaArray.rotate"><code class="docutils literal notranslate"><span class="pre">AntennaArray.rotate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray"><code class="docutils literal notranslate"><span class="pre">PlanarArray</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.antenna_pattern"><code class="docutils literal notranslate"><span class="pre">PlanarArray.antenna_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.array_size"><code class="docutils literal notranslate"><span class="pre">PlanarArray.array_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.normalized_positions"><code class="docutils literal notranslate"><span class="pre">PlanarArray.normalized_positions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.num_ant"><code class="docutils literal notranslate"><span class="pre">PlanarArray.num_ant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.positions"><code class="docutils literal notranslate"><span class="pre">PlanarArray.positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.rotate"><code class="docutils literal notranslate"><span class="pre">PlanarArray.rotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_array.html#sionna.rt.PlanarArray.show"><code class="docutils literal notranslate"><span class="pre">PlanarArray.show()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/antenna_pattern.html">Antenna Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.AntennaPattern"><code class="docutils literal notranslate"><span class="pre">AntennaPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.AntennaPattern.compute_gain"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.compute_gain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.AntennaPattern.patterns"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.patterns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.AntennaPattern.show"><code class="docutils literal notranslate"><span class="pre">AntennaPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.compute_gain"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.compute_gain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.patterns"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.patterns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.PolarizedAntennaPattern.show"><code class="docutils literal notranslate"><span class="pre">PolarizedAntennaPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_pattern.html#vertically-polarized-antenna-pattern-functions">Vertically Polarized Antenna Pattern Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_iso_pattern"><code class="docutils literal notranslate"><span class="pre">v_iso_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_dipole_pattern"><code class="docutils literal notranslate"><span class="pre">v_dipole_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_hw_dipole_pattern"><code class="docutils literal notranslate"><span class="pre">v_hw_dipole_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.v_tr38901_pattern"><code class="docutils literal notranslate"><span class="pre">v_tr38901_pattern()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_pattern.html#polarization-models">Polarization Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.polarization_model_tr38901_1"><code class="docutils literal notranslate"><span class="pre">polarization_model_tr38901_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.polarization_model_tr38901_2"><code class="docutils literal notranslate"><span class="pre">polarization_model_tr38901_2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/antenna_pattern.html#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.antenna_pattern_to_world_implicit"><code class="docutils literal notranslate"><span class="pre">antenna_pattern_to_world_implicit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.antenna_pattern.complex2real_antenna_pattern"><code class="docutils literal notranslate"><span class="pre">complex2real_antenna_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.register_antenna_pattern"><code class="docutils literal notranslate"><span class="pre">register_antenna_pattern()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.register_polarization"><code class="docutils literal notranslate"><span class="pre">register_polarization()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/antenna_pattern.html#sionna.rt.register_polarization_model"><code class="docutils literal notranslate"><span class="pre">register_polarization_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/camera.html">Cameras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/camera.html#sionna.rt.Camera"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/camera.html#sionna.rt.Camera.look_at"><code class="docutils literal notranslate"><span class="pre">Camera.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/camera.html#sionna.rt.Camera.orientation"><code class="docutils literal notranslate"><span class="pre">Camera.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/camera.html#sionna.rt.Camera.position"><code class="docutils literal notranslate"><span class="pre">Camera.position</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/paths.html">Paths</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths"><code class="docutils literal notranslate"><span class="pre">Paths</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.a"><code class="docutils literal notranslate"><span class="pre">Paths.a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.cfr"><code class="docutils literal notranslate"><span class="pre">Paths.cfr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.cir"><code class="docutils literal notranslate"><span class="pre">Paths.cir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.doppler"><code class="docutils literal notranslate"><span class="pre">Paths.doppler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.interactions"><code class="docutils literal notranslate"><span class="pre">Paths.interactions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.num_rx"><code class="docutils literal notranslate"><span class="pre">Paths.num_rx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.num_tx"><code class="docutils literal notranslate"><span class="pre">Paths.num_tx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.objects"><code class="docutils literal notranslate"><span class="pre">Paths.objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.phi_r"><code class="docutils literal notranslate"><span class="pre">Paths.phi_r</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.phi_t"><code class="docutils literal notranslate"><span class="pre">Paths.phi_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.primitives"><code class="docutils literal notranslate"><span class="pre">Paths.primitives</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.rx_array"><code class="docutils literal notranslate"><span class="pre">Paths.rx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.sources"><code class="docutils literal notranslate"><span class="pre">Paths.sources</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.synthetic_array"><code class="docutils literal notranslate"><span class="pre">Paths.synthetic_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.taps"><code class="docutils literal notranslate"><span class="pre">Paths.taps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.targets"><code class="docutils literal notranslate"><span class="pre">Paths.targets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.tau"><code class="docutils literal notranslate"><span class="pre">Paths.tau</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.theta_r"><code class="docutils literal notranslate"><span class="pre">Paths.theta_r</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.theta_t"><code class="docutils literal notranslate"><span class="pre">Paths.theta_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.tx_array"><code class="docutils literal notranslate"><span class="pre">Paths.tx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.valid"><code class="docutils literal notranslate"><span class="pre">Paths.valid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.Paths.vertices"><code class="docutils literal notranslate"><span class="pre">Paths.vertices</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/paths.html#constants">Constants</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType"><code class="docutils literal notranslate"><span class="pre">InteractionType</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType.DIFFRACTION"><code class="docutils literal notranslate"><span class="pre">InteractionType.DIFFRACTION</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType.DIFFUSE"><code class="docutils literal notranslate"><span class="pre">InteractionType.DIFFUSE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType.NONE"><code class="docutils literal notranslate"><span class="pre">InteractionType.NONE</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType.REFRACTION"><code class="docutils literal notranslate"><span class="pre">InteractionType.REFRACTION</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.InteractionType.SPECULAR"><code class="docutils literal notranslate"><span class="pre">InteractionType.SPECULAR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.INVALID_SHAPE"><code class="docutils literal notranslate"><span class="pre">INVALID_SHAPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths.html#sionna.rt.constants.INVALID_PRIMITIVE"><code class="docutils literal notranslate"><span class="pre">INVALID_PRIMITIVE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/paths_solvers.html">Path Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/paths_solvers.html#sionna.rt.PathSolver"><code class="docutils literal notranslate"><span class="pre">PathSolver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths_solvers.html#sionna.rt.PathSolver.__call__"><code class="docutils literal notranslate"><span class="pre">PathSolver.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/paths_solvers.html#sionna.rt.PathSolver.loop_mode"><code class="docutils literal notranslate"><span class="pre">PathSolver.loop_mode</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/radio_devices.html">Radio Devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice"><code class="docutils literal notranslate"><span class="pre">RadioDevice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.color"><code class="docutils literal notranslate"><span class="pre">RadioDevice.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.display_radius"><code class="docutils literal notranslate"><span class="pre">RadioDevice.display_radius</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.look_at"><code class="docutils literal notranslate"><span class="pre">RadioDevice.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.name"><code class="docutils literal notranslate"><span class="pre">RadioDevice.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.orientation"><code class="docutils literal notranslate"><span class="pre">RadioDevice.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.position"><code class="docutils literal notranslate"><span class="pre">RadioDevice.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.RadioDevice.velocity"><code class="docutils literal notranslate"><span class="pre">RadioDevice.velocity</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.Receiver"><code class="docutils literal notranslate"><span class="pre">Receiver</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.Transmitter"><code class="docutils literal notranslate"><span class="pre">Transmitter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.Transmitter.power"><code class="docutils literal notranslate"><span class="pre">Transmitter.power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_devices.html#sionna.rt.Transmitter.power_dbm"><code class="docutils literal notranslate"><span class="pre">Transmitter.power_dbm</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/radio_maps.html">Radio Maps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.cell_size"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cell_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.cells_per_dim"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.cells_per_dim</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.center"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.center</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.orientation"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.rx_cell_indices"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.rx_cell_indices</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.sample_positions"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.sample_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.show"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.show_association"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.show_association()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.size"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.tx_association"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.tx_association()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.PlanarRadioMap.tx_cell_indices"><code class="docutils literal notranslate"><span class="pre">PlanarRadioMap.tx_cell_indices</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.MeshRadioMap.sample_positions"><code class="docutils literal notranslate"><span class="pre">MeshRadioMap.sample_positions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap"><code class="docutils literal notranslate"><span class="pre">RadioMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.add_paths"><code class="docutils literal notranslate"><span class="pre">RadioMap.add_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.cdf"><code class="docutils literal notranslate"><span class="pre">RadioMap.cdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.cell_centers"><code class="docutils literal notranslate"><span class="pre">RadioMap.cell_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.cells_count"><code class="docutils literal notranslate"><span class="pre">RadioMap.cells_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.measurement_surface"><code class="docutils literal notranslate"><span class="pre">RadioMap.measurement_surface</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.transmitter_radio_map"><code class="docutils literal notranslate"><span class="pre">RadioMap.transmitter_radio_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.tx_association"><code class="docutils literal notranslate"><span class="pre">RadioMap.tx_association()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/radio_map_solvers.html">Radio Map Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_map_solvers.html#sionna.rt.RadioMapSolver"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_map_solvers.html#sionna.rt.RadioMapSolver.__call__"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_map_solvers.html#sionna.rt.RadioMapSolver.loop_mode"><code class="docutils literal notranslate"><span class="pre">RadioMapSolver.loop_mode</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/radio_materials.html">Radio Materials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.color"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.eval"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.eval()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.name"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.pdf"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.pdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.sample"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.scene"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.to_string"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterialBase.traverse"><code class="docutils literal notranslate"><span class="pre">RadioMaterialBase.traverse()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial"><code class="docutils literal notranslate"><span class="pre">RadioMaterial</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.conductivity"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.conductivity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.frequency_update"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.frequency_update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.frequency_update_callback"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.frequency_update_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.relative_permittivity"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.relative_permittivity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.scattering_coefficient"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.scattering_coefficient</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.scattering_pattern"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.scattering_pattern</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.thickness"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.thickness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.RadioMaterial.xpd_coefficient"><code class="docutils literal notranslate"><span class="pre">RadioMaterial.xpd_coefficient</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ITURadioMaterial"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ITURadioMaterial.itu_type"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial.itu_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ITURadioMaterial.to_string"><code class="docutils literal notranslate"><span class="pre">ITURadioMaterial.to_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/radio_materials.html#scattering-patterns">Scattering Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ScatteringPattern"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ScatteringPattern.__call__"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.ScatteringPattern.show"><code class="docutils literal notranslate"><span class="pre">ScatteringPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.LambertianPattern"><code class="docutils literal notranslate"><span class="pre">LambertianPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.LambertianPattern.__call__"><code class="docutils literal notranslate"><span class="pre">LambertianPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.LambertianPattern.show"><code class="docutils literal notranslate"><span class="pre">LambertianPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.DirectivePattern"><code class="docutils literal notranslate"><span class="pre">DirectivePattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.DirectivePattern.__call__"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.DirectivePattern.alpha_r"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.alpha_r</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.DirectivePattern.show"><code class="docutils literal notranslate"><span class="pre">DirectivePattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern.__call__"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.__call__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern.alpha_i"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.alpha_i</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern.alpha_r"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.alpha_r</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern.lambda_"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.lambda_</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.BackscatteringPattern.show"><code class="docutils literal notranslate"><span class="pre">BackscatteringPattern.show()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_materials.html#sionna.rt.register_scattering_pattern"><code class="docutils literal notranslate"><span class="pre">register_scattering_pattern()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scene.html">Scenes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/scene.html#sionna.rt.load_scene"><code class="docutils literal notranslate"><span class="pre">load_scene()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene"><code class="docutils literal notranslate"><span class="pre">Scene</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.add"><code class="docutils literal notranslate"><span class="pre">Scene.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.all_set"><code class="docutils literal notranslate"><span class="pre">Scene.all_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.angular_frequency"><code class="docutils literal notranslate"><span class="pre">Scene.angular_frequency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.bandwidth"><code class="docutils literal notranslate"><span class="pre">Scene.bandwidth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.edit"><code class="docutils literal notranslate"><span class="pre">Scene.edit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.frequency"><code class="docutils literal notranslate"><span class="pre">Scene.frequency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.get"><code class="docutils literal notranslate"><span class="pre">Scene.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.mi_scene"><code class="docutils literal notranslate"><span class="pre">Scene.mi_scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.mi_scene_params"><code class="docutils literal notranslate"><span class="pre">Scene.mi_scene_params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.objects"><code class="docutils literal notranslate"><span class="pre">Scene.objects</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.paths_solver"><code class="docutils literal notranslate"><span class="pre">Scene.paths_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.preview"><code class="docutils literal notranslate"><span class="pre">Scene.preview()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.radio_materials"><code class="docutils literal notranslate"><span class="pre">Scene.radio_materials</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.receivers"><code class="docutils literal notranslate"><span class="pre">Scene.receivers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.remove"><code class="docutils literal notranslate"><span class="pre">Scene.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.render"><code class="docutils literal notranslate"><span class="pre">Scene.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.render_to_file"><code class="docutils literal notranslate"><span class="pre">Scene.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.rx_array"><code class="docutils literal notranslate"><span class="pre">Scene.rx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.scene_geometry_updated"><code class="docutils literal notranslate"><span class="pre">Scene.scene_geometry_updated()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.sources"><code class="docutils literal notranslate"><span class="pre">Scene.sources()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.targets"><code class="docutils literal notranslate"><span class="pre">Scene.targets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.temperature"><code class="docutils literal notranslate"><span class="pre">Scene.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.thermal_noise_power"><code class="docutils literal notranslate"><span class="pre">Scene.thermal_noise_power</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.transmitters"><code class="docutils literal notranslate"><span class="pre">Scene.transmitters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.tx_array"><code class="docutils literal notranslate"><span class="pre">Scene.tx_array</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.wavelength"><code class="docutils literal notranslate"><span class="pre">Scene.wavelength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.Scene.wavenumber"><code class="docutils literal notranslate"><span class="pre">Scene.wavenumber</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/scene.html#built-in-scenes">Built-in scenes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.box"><code class="docutils literal notranslate"><span class="pre">box</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.box_one_screen"><code class="docutils literal notranslate"><span class="pre">box_one_screen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.box_two_screens"><code class="docutils literal notranslate"><span class="pre">box_two_screens</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.double_reflector"><code class="docutils literal notranslate"><span class="pre">double_reflector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.etoile"><code class="docutils literal notranslate"><span class="pre">etoile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.floor_wall"><code class="docutils literal notranslate"><span class="pre">floor_wall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.florence"><code class="docutils literal notranslate"><span class="pre">florence</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.munich"><code class="docutils literal notranslate"><span class="pre">munich</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.san_francisco"><code class="docutils literal notranslate"><span class="pre">san_francisco</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.simple_reflector"><code class="docutils literal notranslate"><span class="pre">simple_reflector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.simple_street_canyon"><code class="docutils literal notranslate"><span class="pre">simple_street_canyon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.simple_street_canyon_with_cars"><code class="docutils literal notranslate"><span class="pre">simple_street_canyon_with_cars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.simple_wedge"><code class="docutils literal notranslate"><span class="pre">simple_wedge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.triple_reflector"><code class="docutils literal notranslate"><span class="pre">triple_reflector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/scene.html#built-in-meshes">Built-in meshes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.low_poly_car"><code class="docutils literal notranslate"><span class="pre">low_poly_car</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene.html#sionna.rt.scene.sphere"><code class="docutils literal notranslate"><span class="pre">sphere</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scene_object.html">Scene Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject"><code class="docutils literal notranslate"><span class="pre">SceneObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.clone"><code class="docutils literal notranslate"><span class="pre">SceneObject.clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.look_at"><code class="docutils literal notranslate"><span class="pre">SceneObject.look_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.mi_mesh"><code class="docutils literal notranslate"><span class="pre">SceneObject.mi_mesh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.name"><code class="docutils literal notranslate"><span class="pre">SceneObject.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.object_id"><code class="docutils literal notranslate"><span class="pre">SceneObject.object_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.orientation"><code class="docutils literal notranslate"><span class="pre">SceneObject.orientation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.position"><code class="docutils literal notranslate"><span class="pre">SceneObject.position</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.radio_material"><code class="docutils literal notranslate"><span class="pre">SceneObject.radio_material</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.scaling"><code class="docutils literal notranslate"><span class="pre">SceneObject.scaling</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.scene"><code class="docutils literal notranslate"><span class="pre">SceneObject.scene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scene_object.html#sionna.rt.SceneObject.velocity"><code class="docutils literal notranslate"><span class="pre">SceneObject.velocity</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">Utility Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#complex-valued-tensors">Complex-valued tensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_abs"><code class="docutils literal notranslate"><span class="pre">cpx_abs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_abs_square"><code class="docutils literal notranslate"><span class="pre">cpx_abs_square()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_add"><code class="docutils literal notranslate"><span class="pre">cpx_add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_convert"><code class="docutils literal notranslate"><span class="pre">cpx_convert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_div"><code class="docutils literal notranslate"><span class="pre">cpx_div()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_exp"><code class="docutils literal notranslate"><span class="pre">cpx_exp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_mul"><code class="docutils literal notranslate"><span class="pre">cpx_mul()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_sqrt"><code class="docutils literal notranslate"><span class="pre">cpx_sqrt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.cpx_sub"><code class="docutils literal notranslate"><span class="pre">cpx_sub()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#electromagnetics">Electromagnetics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.complex_relative_permittivity"><code class="docutils literal notranslate"><span class="pre">complex_relative_permittivity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.fresnel"><code class="docutils literal notranslate"><span class="pre">fresnel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.f_utd"><code class="docutils literal notranslate"><span class="pre">f_utd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.fresnel_reflection_coefficients_simplified"><code class="docutils literal notranslate"><span class="pre">fresnel_reflection_coefficients_simplified()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.itu_coefficients_single_layer_slab"><code class="docutils literal notranslate"><span class="pre">itu_coefficients_single_layer_slab()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#geometry">Geometry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.phi_hat"><code class="docutils literal notranslate"><span class="pre">phi_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.theta_hat"><code class="docutils literal notranslate"><span class="pre">theta_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.r_hat"><code class="docutils literal notranslate"><span class="pre">r_hat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.theta_phi_from_unit_vec"><code class="docutils literal notranslate"><span class="pre">theta_phi_from_unit_vec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.rotation_matrix"><code class="docutils literal notranslate"><span class="pre">rotation_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#jones-calculus">Jones calculus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.implicit_basis_vector"><code class="docutils literal notranslate"><span class="pre">implicit_basis_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.jones_matrix_rotator"><code class="docutils literal notranslate"><span class="pre">jones_matrix_rotator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.jones_matrix_rotator_flip_forward"><code class="docutils literal notranslate"><span class="pre">jones_matrix_rotator_flip_forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.to_world_jones_rotator"><code class="docutils literal notranslate"><span class="pre">to_world_jones_rotator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.jones_matrix_to_world_implicit"><code class="docutils literal notranslate"><span class="pre">jones_matrix_to_world_implicit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.jones_vec_dot"><code class="docutils literal notranslate"><span class="pre">jones_vec_dot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#meshes">Meshes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.load_mesh"><code class="docutils literal notranslate"><span class="pre">load_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.transform_mesh"><code class="docutils literal notranslate"><span class="pre">transform_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#miscellaneous">Miscellaneous</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.complex_sqrt"><code class="docutils literal notranslate"><span class="pre">complex_sqrt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.dbm_to_watt"><code class="docutils literal notranslate"><span class="pre">dbm_to_watt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.isclose"><code class="docutils literal notranslate"><span class="pre">isclose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.log10"><code class="docutils literal notranslate"><span class="pre">log10()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.sigmoid"><code class="docutils literal notranslate"><span class="pre">sigmoid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.sinc"><code class="docutils literal notranslate"><span class="pre">sinc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.subcarrier_frequencies"><code class="docutils literal notranslate"><span class="pre">subcarrier_frequencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.watt_to_dbm"><code class="docutils literal notranslate"><span class="pre">watt_to_dbm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#ray-tracing">Ray tracing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.fibonacci_lattice"><code class="docutils literal notranslate"><span class="pre">fibonacci_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.spawn_ray_from_sources"><code class="docutils literal notranslate"><span class="pre">spawn_ray_from_sources()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.offset_p"><code class="docutils literal notranslate"><span class="pre">offset_p()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.spawn_ray_towards"><code class="docutils literal notranslate"><span class="pre">spawn_ray_towards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/utils.html#sionna.rt.utils.spawn_ray_to"><code class="docutils literal notranslate"><span class="pre">spawn_ray_to()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/developer.html">Developer Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dev_compat_frameworks.html">Compatibility with other Frameworks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_compat_frameworks.html#type-conversions">Type conversions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_compat_frameworks.html#gradients">Gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_compat_frameworks.html#training-loop-in-pytorch">Training-Loop in PyTorch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dev_understanding_paths.html">Understanding the Paths Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dev_custom_antenna_patterns.html">Custom Antenna Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_custom_antenna_patterns.html#gradient-based-optimization">Gradient-based Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dev_custom_radio_materials.html">Understanding Radio Materials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#modifying-parameters-of-radio-materials">Modifying Parameters of Radio Materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#calibrating-material-parameters-through-gradient-descent">Calibrating Material Parameters Through Gradient Descent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#custom-radio-materials">Custom Radio Materials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#representation-of-jones-vector-and-matrices">Representation of Jones vector and Matrices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#implicit-basis">Implicit Basis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#the-local-interaction-basis">The Local Interaction Basis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#mandatory-subclass-methods">Mandatory Subclass Methods</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#sample"><cite>sample()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#eval"><cite>eval()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#pdf"><cite>pdf()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#traverse"><cite>traverse()</cite></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#to-string"><cite>to_string()</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#implementation-of-a-simple-radio-material-model">Implementation of a Simple Radio Material Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../developer/dev_custom_radio_materials.html#a-more-complex-material-model">A More Complex Material Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../developer/dev_custom_scattering_patterns.html">Custom Scattering Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../developer/dev_custom_scattering_patterns.html#differentiable-parameters">Differentiable Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://nvlabs.github.io/sionna/rt/tech-report/index.html">Technical Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rt_gui.html">Sionna RT GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVlabs/sionna-rt">Get the Code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sionna RT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Introduction to Sionna RT</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Introduction-to-Sionna-RT">
+<h1>Introduction to Sionna RT<a class="headerlink" href="#Introduction-to-Sionna-RT" title="Link to this heading"></a></h1>
+<p>Ray tracing is a technique to simulate environment-specific and physically accurate channel realizations for a given scene and user position. Please see the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/em_primer.html">EM Primer</a> for further details on the theoretical background of ray tracing of wireless channels.</p>
+<p>Sionna RT is a open-source hardware-accelerated differentiable ray tracer for radio propagation modeling which is built on top of <a class="reference external" href="https://www.mitsuba-renderer.org/">Mitsuba 3</a>. Mitsuba 3 is a rendering system for forward and inverse light-transport simulation that makes use of the differentiable just-in-time compiler <a class="reference external" href="https://drjit.readthedocs.io/en/latest/">Dr.Jit</a>.</p>
+<p>Thanks to Dr.Jit’s automatic gradient computation, gradients of functions of channel responses or radio maps with respect to most parameters of the ray tracing process, including material properties, antenna and scattering patterns, orientations, and positions of objects, can be efficiently computed and used in various gradient-based optimization problems.</p>
+<p>Sionna RT relies on Mitsuba 3 for the rendering and handling of scenes, e.g., its XML-file format. When imported, Sionna RT automatically configures the correct <a class="reference external" href="https://mitsuba.readthedocs.io/en/stable/src/key_topics/variants.html">Mitsuba variant</a> based on the available hardware.</p>
+<p>Scene files for Mitsuba 3 can be created, edited, and exported with the popular open-source 3D creation suite <a class="reference external" href="https://www.blender.org/">Blender</a> and the <a class="reference external" href="https://github.com/mitsuba-renderer/mitsuba-blender">Mitsuba-Blender add-on</a>. One can rapdily create scenes from almost any place in the world using <a class="reference external" href="https://www.openstreetmap.org/">OpenStreetMap</a> and the <a class="reference external" href="https://prochitecture.gumroad.com/l/blender-osm">Blender-OSM add-on</a>. In Sionna, scenes and radio propagation paths can be
+either rendered through the lens of configurable cameras via ray tracing or displayed with an integrated 3D viewer. For more detail on scene creation and rendering, we refer to <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/rt.html">Sionna RT’s API documentation</a> and the available <a class="reference external" href="https://youtu.be/7xHLDxUaQ7c">video tutorial</a>.</p>
+<section id="Imports">
+<h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import or install Sionna</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sionna.rt</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;pip install sionna-rt&quot;</span><span class="p">)</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sionna.rt</span>
+
+<span class="c1"># Other imports</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mitsuba</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">no_preview</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Toggle to False to use the preview widget</span>
+
+<span class="c1"># Import relevant components from Sionna RT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sionna.rt</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_scene</span><span class="p">,</span> <span class="n">PlanarArray</span><span class="p">,</span> <span class="n">Transmitter</span><span class="p">,</span> <span class="n">Receiver</span><span class="p">,</span> <span class="n">Camera</span><span class="p">,</span>\
+                      <span class="n">PathSolver</span><span class="p">,</span> <span class="n">RadioMapSolver</span><span class="p">,</span> <span class="n">subcarrier_frequencies</span>
+
+<span class="c1"># Query the Mitsuba variant that was automatically selected by Sionna RT.</span>
+<span class="c1"># There should be no need to adjust it, but if you do, make sure to select</span>
+<span class="c1"># a variant ending in `*_ad_mono_polarized`.</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mitsuba variant: </span><span class="si">{</span><span class="n">mi</span><span class="o">.</span><span class="n">variant</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Mitsuba variant: cuda_ad_mono_polarized
+</pre></div></div>
+</div>
+</section>
+<section id="Loading-and-Visualizing-Scenes">
+<h2>Loading and Visualizing Scenes<a class="headerlink" href="#Loading-and-Visualizing-Scenes" title="Link to this heading"></a></h2>
+<p>Sionna RT can either load external scene files (in Mitsuba’s XML file format) or it can load one of the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/scene.html#examples">integrated scenes</a>.</p>
+<p>In this example, we load an example scene containing the area around the Frauenkirche in Munich, Germany.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load integrated scene</span>
+<span class="n">scene</span> <span class="o">=</span> <span class="n">load_scene</span><span class="p">(</span><span class="n">sionna</span><span class="o">.</span><span class="n">rt</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">munich</span><span class="p">)</span> <span class="c1"># Try also sionna.rt.scene.etoile</span>
+</pre></div>
+</div>
+</div>
+<p>To visualize the scene, we can use the <code class="docutils literal notranslate"><span class="pre">preview</span></code> function which opens an interactive preview of the scene. This only works in Jupyter notebooks.</p>
+<p>You can use the following controls:</p>
+<ul class="simple">
+<li><p>Mouse left: Rotate</p></li>
+<li><p>Scroll wheel: Zoom</p></li>
+<li><p>Mouse right: Move</p></li>
+</ul>
+<p>Please note that only one preview instance per scene can be opened at the same time. However, multiple scenes can be loaded in parallel.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">no_preview</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">preview</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<p>It is often convenient to choose a viewpoint in the 3D preview prior to rendering it as a high-quality image. The next cell uses the “preview” camera which corresponds to the viewpoint of the current preview image.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only availabe if a preview is open</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">no_preview</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="s2">&quot;preview&quot;</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">512</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>One can also render the image to a file as shown below:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only availabe if a preview is open</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">no_preview</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="s2">&quot;preview&quot;</span><span class="p">,</span>
+                         <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;scene.png&quot;</span><span class="p">,</span>
+                         <span class="n">resolution</span><span class="o">=</span><span class="p">[</span><span class="mi">650</span><span class="p">,</span><span class="mi">500</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<p>Instead of the preview camera, one can also specify dedicated cameras with different positions and <code class="docutils literal notranslate"><span class="pre">look_at</span></code> directions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create new camera with different configuration</span>
+<span class="n">my_cam</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">150</span><span class="p">],</span> <span class="n">look_at</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">28</span><span class="p">])</span>
+
+<span class="c1"># Render scene with new camera*</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="n">my_cam</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="p">[</span><span class="mi">650</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">512</span><span class="p">);</span> <span class="c1"># Increase num_samples to increase image quality</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_13_0.png" src="../_images/tutorials_Introduction_13_0.png" />
+</div>
+</div>
+</section>
+<section id="Inspecting-SceneObjects-and-Editing-of-Scenes">
+<h2>Inspecting SceneObjects and Editing of Scenes<a class="headerlink" href="#Inspecting-SceneObjects-and-Editing-of-Scenes" title="Link to this heading"></a></h2>
+<p>A scene consists of multiple <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/scene_object.html">SceneObjects</a> which can be accessed in the following way:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span> <span class="o">=</span> <span class="n">load_scene</span><span class="p">(</span><span class="n">sionna</span><span class="o">.</span><span class="n">rt</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">simple_street_canyon</span><span class="p">,</span> <span class="n">merge_shapes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">objects</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;building_1&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f2315670&gt;,
+ &#39;building_6&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f23161b0&gt;,
+ &#39;building_5&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f2316330&gt;,
+ &#39;building_4&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f2316390&gt;,
+ &#39;building_3&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f2316570&gt;,
+ &#39;building_2&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f2316660&gt;,
+ &#39;floor&#39;: &lt;sionna.rt.scene_object.SceneObject at 0x76b7f23167b0&gt;}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">floor</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;floor&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>SceneObjects can be transformed by the following properties and methods:</p>
+<ul class="simple">
+<li><p>position</p></li>
+<li><p>orientation</p></li>
+<li><p>scaling</p></li>
+<li><p>look_at</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Position (x,y,z) [m]: &quot;</span><span class="p">,</span> <span class="n">floor</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Orientation (alpha, beta, gamma) [rad]: &quot;</span><span class="p">,</span> <span class="n">floor</span><span class="o">.</span><span class="n">orientation</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scaling: &quot;</span><span class="p">,</span> <span class="n">floor</span><span class="o">.</span><span class="n">scaling</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Position (x,y,z) [m]:  [[-0.769669, 0.238537, -0.0307941]]
+Orientation (alpha, beta, gamma) [rad]:  [[0, 0, 0]]
+Scaling:  [[1, 1, 1]]
+</pre></div></div>
+</div>
+<p>More details on these functionalities can be found in the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials/Scene-Edit.html">Tutorial on Loading and Editing of Scenes</a>.</p>
+<p>Every SceneObject has another important property, the <code class="docutils literal notranslate"><span class="pre">velocity</span></code> vector:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Velocity (x,y,z) [m/s]: &quot;</span><span class="p">,</span> <span class="n">floor</span><span class="o">.</span><span class="n">velocity</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Velocity (x,y,z) [m/s]:  [[0, 0, 0]]
+</pre></div></div>
+</div>
+<p>This property is used during the ray tracing process to compute a Doppler shift for every propagation path. This information can then be used to synthetically compute time evolution of channel impulse responses. More details on this topic are provided in the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials/Mobility.html">Tutorial on Mobility</a>.</p>
+<p>The last property of SceneObjects that we discuss here is the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_materials.html">RadioMaterial</a>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">floor</span><span class="o">.</span><span class="n">radio_material</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ITURadioMaterial type=concrete
+                 eta_r=5.240
+                 sigma=0.123
+                 thickness=0.100
+                 scattering_coefficient=0.000
+                 xpd_coefficient=0.000
+</pre></div></div>
+</div>
+<p>The radio material determines how an object interacts with incident radio waves. To learn more about radio materials and how they can be modified, we invited you to have a look at the Developer Guide on <a class="reference external" href="https://nvlabs.github.io/sionna/rt/developer/dev_custom_radio_materials.html">Understanding Radio Materials</a>.</p>
+<p>Depending on the type of radio material, some of its properties might change as a function of the frequency of the incident radio wave:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">28e9</span> <span class="c1"># in Hz; implicitly updates RadioMaterials that implement frequency dependent properties</span>
+<span class="n">floor</span><span class="o">.</span><span class="n">radio_material</span> <span class="c1"># Note that the conductivity (sigma) changes automatically</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ITURadioMaterial type=concrete
+                 eta_r=5.240
+                 sigma=0.626
+                 thickness=0.100
+                 scattering_coefficient=0.000
+                 xpd_coefficient=0.000
+</pre></div></div>
+</div>
+</section>
+<section id="Ray-tracing-of-Propagation-Paths">
+<h2>Ray tracing of Propagation Paths<a class="headerlink" href="#Ray-tracing-of-Propagation-Paths" title="Link to this heading"></a></h2>
+<p>Once a scene is loaded, we can place Transmitters and Receivers in it and compute propagation paths between them. All transmitters and all receivers are equipped with the same antenna arrays which are defined by the <code class="docutils literal notranslate"><span class="pre">scene</span></code> properties <code class="docutils literal notranslate"><span class="pre">scene.tx_array</span></code> and <code class="docutils literal notranslate"><span class="pre">scene.rx_array</span></code>, respectively. Antenna arrays are composed of multiple identical antennas. Antennas can have custom or pre-defined patterns and are either single- or dual-polarized. A scene can contain multiple transmitters and receivers
+as long as they have unique names.</p>
+<p>More details on antenna patterns can be found in the Developer Guide <a class="reference external" href="https://nvlabs.github.io/sionna/rt/developer/dev_custom_radio_materials.html">Understanding Radio Materials</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span> <span class="o">=</span> <span class="n">load_scene</span><span class="p">(</span><span class="n">sionna</span><span class="o">.</span><span class="n">rt</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">munich</span><span class="p">,</span> <span class="n">merge_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Merge shapes to speed-up computations</span>
+
+<span class="c1"># Configure antenna array for all transmitters</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">tx_array</span> <span class="o">=</span> <span class="n">PlanarArray</span><span class="p">(</span><span class="n">num_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">num_cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">vertical_spacing</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">horizontal_spacing</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;tr38901&quot;</span><span class="p">,</span>
+                             <span class="n">polarization</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">)</span>
+
+<span class="c1"># Configure antenna array for all receivers</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rx_array</span> <span class="o">=</span> <span class="n">PlanarArray</span><span class="p">(</span><span class="n">num_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">num_cols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">vertical_spacing</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">horizontal_spacing</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;dipole&quot;</span><span class="p">,</span>
+                             <span class="n">polarization</span><span class="o">=</span><span class="s2">&quot;cross&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create transmitter</span>
+<span class="n">tx</span> <span class="o">=</span> <span class="n">Transmitter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;tx&quot;</span><span class="p">,</span>
+                 <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">8.5</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">27</span><span class="p">],</span>
+                 <span class="n">display_radius</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Add transmitter instance to scene</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+<span class="c1"># Create a receiver</span>
+<span class="n">rx</span> <span class="o">=</span> <span class="n">Receiver</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;rx&quot;</span><span class="p">,</span>
+              <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">45</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mf">1.5</span><span class="p">],</span>
+              <span class="n">display_radius</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Add receiver instance to scene</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span>
+
+<span class="n">tx</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span> <span class="c1"># Transmitter points towards receiver</span>
+</pre></div>
+</div>
+</div>
+<p>Propagation paths are computed with the help of a <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths_solvers.html">PathSolver</a>. The next cell shows how such a path solver is instantiated and used.</p>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> determines the maximum number of interactions between a ray and a scene objects. For example, with a <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> of zero, only LoS paths are considered. For a <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> of one, LoS as well as first-order reflections of refractions are considered. When the argument <code class="docutils literal notranslate"><span class="pre">synthetic_array</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, antenna arrays are explicitly modeled by finding paths between any pair of transmitting and receiving antennas in the scene. Otherwise, arrays are represented
+by a single antenna located in the center of the array. Phase shifts related to the relative antenna positions will then be applied based on a plane-wave assumption when the channel impulse responses are computed.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a path solver</span>
+<span class="c1"># The same path solver can be used with multiple scenes</span>
+<span class="n">p_solver</span>  <span class="o">=</span> <span class="n">PathSolver</span><span class="p">()</span>
+
+<span class="c1"># Compute propagation paths</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">p_solver</span><span class="p">(</span><span class="n">scene</span><span class="o">=</span><span class="n">scene</span><span class="p">,</span>
+                 <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">los</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">specular_reflection</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">diffuse_reflection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">refraction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">synthetic_array</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">seed</span><span class="o">=</span><span class="mi">41</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The <a class="reference external" href="https://nvlabs.github.io/sionna/rt/paths.html">Paths</a> object contains all paths that have been found between transmitters and receivers. In principle, the existence of each path is determininistic for a given position and environment. Please note that due to the stochastic nature of the <em>shoot-and-bounce</em> algorithm, different runs of the path solver can lead to different paths that are found. Most importantly, diffusely reflected paths are obtained through random sampling of directions
+after each interaction with a scene object. You can provide the <code class="docutils literal notranslate"><span class="pre">seed</span></code> argument to the solver to ensure reproducibility.</p>
+<p>Let us now visualize the found paths in the scene:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">no_preview</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="n">my_cam</span><span class="p">,</span> <span class="n">paths</span><span class="o">=</span><span class="n">paths</span><span class="p">,</span> <span class="n">clip_at</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">preview</span><span class="p">(</span><span class="n">paths</span><span class="o">=</span><span class="n">paths</span><span class="p">,</span> <span class="n">clip_at</span><span class="o">=</span><span class="mi">20</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_33_0.png" src="../_images/tutorials_Introduction_33_0.png" />
+</div>
+</div>
+<p>The Paths object contains detailed information about every found path and allows us to generate channel impulse responses and apply Doppler shifts for the simulation of time evolution. For a detailed description, we refer to the developer guide <a class="reference external" href="https://nvlabs.github.io/sionna/rt/developer/dev_understanding_paths.html">Understanding the Paths Object</a>.</p>
+</section>
+<section id="From-Paths-to-Channel-Impulse-and-Frequency-Responses">
+<h2>From Paths to Channel Impulse and Frequency Responses<a class="headerlink" href="#From-Paths-to-Channel-Impulse-and-Frequency-Responses" title="Link to this heading"></a></h2>
+<p>Once paths are computed, they can be transformed into a baseband-equivalent channel impulse response (CIR) via <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths.html#sionna.rt.Paths.cir">Paths.cir()</a>, into a discrete complex baseband-equivalent channel impulse response via <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths.html#sionna.rt.Paths.taps">Paths.taps()</a>, or into a channel frequency response (CFR) via <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths.html#sionna.rt.Paths.cfr">Paths.cfr()</a>.
+These class methods can simulate time evolution of the channel based on the computed Doppler shifts (see <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths.html#sionna.rt.Paths.doppler">Paths.doppler</a>).</p>
+<p>Let us first derive and visualize the baseband-equivalent channel impulse response from the paths computed above:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">cir</span><span class="p">(</span><span class="n">normalize_delays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">out_type</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+
+<span class="c1"># Shape: [num_rx, num_rx_ant, num_tx, num_tx_ant, num_paths, num_time_steps]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of a: &quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Shape: [num_rx, num_rx_ant, num_tx, num_tx_ant, num_paths]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of tau: &quot;</span><span class="p">,</span> <span class="n">tau</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Shape of a:  (1, 2, 1, 1, 27, 1)
+Shape of tau:  (1, 2, 1, 1, 27)
+</pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">out_type</span></code> argument can be used to convert the CIR into tensors from different frameworks, such as <a class="reference external" href="https://drjit.readthedocs.io/en/latest/reference.html">Dr.Jit</a> (“drjit”), <a class="reference external" href="https://numpy.org">Numpy</a> (“numpy”), <a class="reference external" href="https://jax.readthedocs.io/en/latest/index.html">Jax</a> (“jax”), <a class="reference external" href="https://www.tensorflow.org">TensorFlow</a> (“tf”), and <a class="reference external" href="https://pytorch.org">PyTorch</a> (“torch”). Please see the developer guide <a class="reference external" href="https://nvlabs.github.io/sionna/rt/developer/dev_compat_frameworks.html">Compatibility with other
+Frameworks</a> for more information on the interoperability of Sionna RT with other array frameworks, including the propagation of gradients.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">tau</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:]</span><span class="o">/</span><span class="mf">1e-9</span> <span class="c1"># Scale to ns</span>
+<span class="n">a_abs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">a_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">a_abs</span><span class="p">)</span>
+
+<span class="c1"># And plot the CIR</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Channel impulse response&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a_abs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\tau$ [ns]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$|a|$&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_38_0.png" src="../_images/tutorials_Introduction_38_0.png" />
+</div>
+</div>
+<p>Note that the delay of the first arriving path is by default normalized to zero. This behavior can be changed by setting the argument <code class="docutils literal notranslate"><span class="pre">normalize_delays</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>We can obtain the channel frequency response in a similar manner:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OFDM system parameters</span>
+<span class="n">num_subcarriers</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">subcarrier_spacing</span><span class="o">=</span><span class="mf">30e3</span>
+
+<span class="c1"># Compute frequencies of subcarriers relative to the carrier frequency</span>
+<span class="n">frequencies</span> <span class="o">=</span> <span class="n">subcarrier_frequencies</span><span class="p">(</span><span class="n">num_subcarriers</span><span class="p">,</span> <span class="n">subcarrier_spacing</span><span class="p">)</span>
+
+<span class="c1"># Compute channel frequency response</span>
+<span class="n">h_freq</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">cfr</span><span class="p">(</span><span class="n">frequencies</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span>
+                   <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># Normalize energy</span>
+                   <span class="n">normalize_delays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">out_type</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+
+<span class="c1"># Shape: [num_rx, num_rx_ant, num_tx, num_tx_ant, num_time_steps, num_subcarriers]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of h_freq: &quot;</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Plot absolute value</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">h_freq</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:]);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Subcarrier index&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;|$h_\text</span><span class="si">{freq}</span><span class="s2">$|&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Channel frequency response&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Shape of h_freq:  (1, 2, 1, 1, 1, 1024)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_40_1.png" src="../_images/tutorials_Introduction_40_1.png" />
+</div>
+</div>
+<p>For link-level simulations in the time-domain, we often require the discrete baseband-equivalent channel impulse response or simply the channel taps. These are obtained by sampling the ideally low-pass filtered channel impulse response at the desired sampling frequency. By default, it is assumed that sampling is performed at the Nyquist rate.</p>
+<p>As the underlying sinc filter has an infinitely long response, the channel taps need to be truncated at a minimum and maximum value, i.e., <code class="docutils literal notranslate"><span class="pre">l_min</span></code> and <code class="docutils literal notranslate"><span class="pre">l_max</span></code>, respectively.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taps</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">taps</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="mf">100e6</span><span class="p">,</span> <span class="c1"># Bandwidth to which the channel is low-pass filtered</span>
+                  <span class="n">l_min</span><span class="o">=-</span><span class="mi">6</span><span class="p">,</span>        <span class="c1"># Smallest time lag</span>
+                  <span class="n">l_max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>       <span class="c1"># Largest time lag</span>
+                  <span class="n">sampling_frequency</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1"># Sampling at Nyquist rate, i.e., 1/bandwidth</span>
+                  <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Normalize energy</span>
+                  <span class="n">normalize_delays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">out_type</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of taps: &quot;</span><span class="p">,</span> <span class="n">taps</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">101</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">taps</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Tap index $\ell$&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;|$h[\ell]|$&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Discrete channel taps&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Shape of taps:  (1, 2, 1, 1, 1, 107)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_42_1.png" src="../_images/tutorials_Introduction_42_1.png" />
+</div>
+</div>
+<p>Every radio device and scene object has a velocity vector associated with it. These are used to compute path-specific Doppler shifts that enable the simulation of mobility. More details can be found in the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials/Mobility.html">Tutorial on Mobility</a>.</p>
+<p>We will now assign a non-zero velocity vector to the transmitter, recompute the propagation paths, and compute a time-varying channel impulse reponse:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tx&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Recompute propagation paths</span>
+<span class="n">paths_mob</span> <span class="o">=</span> <span class="n">p_solver</span><span class="p">(</span><span class="n">scene</span><span class="o">=</span><span class="n">scene</span><span class="p">,</span>
+                     <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">los</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">specular_reflection</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">diffuse_reflection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">refraction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">synthetic_array</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">seed</span><span class="o">=</span><span class="mi">41</span><span class="p">)</span>
+
+<span class="c1"># Compute CIR with time-evolution</span>
+<span class="n">num_time_steps</span><span class="o">=</span><span class="mi">100</span>
+<span class="n">sampling_frequency</span> <span class="o">=</span> <span class="mf">1e4</span>
+<span class="n">a_mob</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">paths_mob</span><span class="o">.</span><span class="n">cir</span><span class="p">(</span><span class="n">sampling_frequency</span><span class="o">=</span><span class="n">sampling_frequency</span><span class="p">,</span>
+                         <span class="n">num_time_steps</span><span class="o">=</span><span class="n">num_time_steps</span><span class="p">,</span>
+                         <span class="n">out_type</span><span class="o">=</span><span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+
+<span class="c1"># Inspect time-evolution of a single path coefficient</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_time_steps</span><span class="p">)</span><span class="o">/</span><span class="n">sampling_frequency</span><span class="o">*</span><span class="mi">1000</span><span class="p">,</span>
+         <span class="n">a_mob</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time [ms]&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\Re\{a_0(t) \}$&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Time-evolution of a path coefficient&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_44_0.png" src="../_images/tutorials_Introduction_44_0.png" />
+</div>
+</div>
+</section>
+<section id="Radio-Maps">
+<h2>Radio Maps<a class="headerlink" href="#Radio-Maps" title="Link to this heading"></a></h2>
+<p>Sionna RT can compute radio maps for all transmitters in a scene. A <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html">RadioMap</a> assigns a metric, such as path gain, received signal strength (RSS), or signal-to-interference-plus-noise ratio (SINR), for a specific transmitter to every point on a plane. In other words, for a given transmitter, it associates every point on a surface with the channel gain, RSS, or SINR, that a receiver with a specific orientation would observe at this
+point.</p>
+<p>Like the computation of propagation paths requires a <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths_solvers.html">PathSolver</a>, the computation of radio maps requires a <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_map_solvers.html">RadioMapSolver</a>. The following code snippet shows how a radio map can be computed and displayed.</p>
+<p>More information about radio maps can be found in the detailed <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials/Radio-Maps.html">Tutorial on Radio Maps</a>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm_solver</span> <span class="o">=</span> <span class="n">RadioMapSolver</span><span class="p">()</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">rm_solver</span><span class="p">(</span><span class="n">scene</span><span class="o">=</span><span class="n">scene</span><span class="p">,</span>
+               <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+               <span class="n">cell_size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+               <span class="n">samples_per_tx</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">no_preview</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="n">my_cam</span><span class="p">,</span> <span class="n">radio_map</span><span class="o">=</span><span class="n">rm</span><span class="p">);</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">preview</span><span class="p">(</span><span class="n">radio_map</span><span class="o">=</span><span class="n">rm</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_Introduction_47_0.png" src="../_images/tutorials_Introduction_47_0.png" />
+</div>
+</div>
+</section>
+<section id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Link to this heading"></a></h2>
+<p>In this tutorial, you have learned the basics of Sionna RT. You now know how paths can be found in complex environments and how the CIR, CFR, and taps can be derived from them. You have also learned how radio maps can be created.</p>
+<p>There is one key feature of Sionna RT that was not discussed in this notebook: Automatic gradient computation. Like most components of Sionna, also Sionna RT is differentiable with respect to most parameters, such as radio materials, scattering and atenna patterns, transmitter and receiver orientations, array geometries, positions, etc.</p>
+<p>Please have a look at the <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/rt.html">API documentation</a> of the various components and the other available <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials.html">Tutorials</a> and <a class="reference external" href="https://nvlabs.github.io/sionna/rt/developer/developer.html">Developer Guides</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Diffraction.html" class="btn btn-neutral float-right" title="Tutorial on Diffraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2026 NVIDIA CORPORATION.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
