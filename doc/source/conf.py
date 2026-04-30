@@ -36,6 +36,7 @@ extensions = ["sphinx_rtd_theme",
               "sphinx.ext.mathjax",
               "sphinx_copybutton",
               "nbsphinx",
+              "sphinxcontrib.bibtex",
               "_ext.list_registry",
              ]
 autodoc_typehints = "description"
