@@ -31,6 +31,10 @@
 	</bsdf>
 
 <!-- Emitters -->
+	<emitter type="point" id="ceiling_light">
+		<point name="position" x="0.0" y="0.0" z="2.2"/>
+		<rgb name="intensity" value="3, 3, 3"/>
+	</emitter>
 
 
 <!-- Shapes -->
