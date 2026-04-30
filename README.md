@@ -10,7 +10,7 @@ It is built on top of [Mitsuba 3](https://github.com/mitsuba-renderer/mitsuba3) 
 [TensorFlow](https://www.tensorflow.org/), [PyTorch](https://pytorch.org/), and [JAX](https://jax.readthedocs.io/en/latest/index.html).
 
 The official documentation can be found on the [Sionna
-website](https://nvlabs.github.io/sionna/).
+website](https://propagamap.github.io/sionna-rt/).
 
 
 ## Installation
