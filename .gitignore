@@ -7,4 +7,3 @@ __pycache__/
 .eggs/
 .ipynb_checkpoints
 *.nsys-rep
-venv
