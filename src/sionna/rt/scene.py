@@ -711,7 +711,7 @@ class Scene:
         rm_vmin: float | None=None,
         rm_vmax: float | None=None,
         show_devices: bool=True,
-        show_orientations: bool=True,
+        show_orientations: bool=True
     ) -> mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive
@@ -776,7 +776,6 @@ class Scene:
         :param show_devices: Show radio devices
 
         :param show_orientations: Show orientation of radio devices
-
         """
         image = render(
             scene=self,
@@ -796,7 +795,7 @@ class Scene:
             resolution=resolution,
             fov=fov,
             envmap=envmap,
-            lighting_scale=lighting_scale,
+            lighting_scale=lighting_scale
         )
 
         ext = os.path.splitext(filename)[1].lower()

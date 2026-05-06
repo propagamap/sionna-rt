@@ -310,13 +310,11 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         if em is env_em:
             continue
         params = mi.traverse(em)
-        if 'position' not in params or 'intensity.value' not in params:
-            continue
         pos = np.array(params['position']).reshape(-1)[:3]
-        intensity = float(dr.slice(params['intensity.value'], 0))
+        intensity = np.array(params['intensity.value']).flat[0]
         result[f"scene_light_{i}"] = {
             "type": "point",
-            "position": pos.tolist(),
+            "position": pos,
             "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
         }
 
