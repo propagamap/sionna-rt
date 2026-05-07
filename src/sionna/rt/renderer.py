@@ -283,7 +283,7 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
     else:
         integrator["type"] = "path"
     result["integrator"] = integrator
-    
+
     # --- Custom emitters
     for i, em in enumerate(scene.mi_scene.emitters()):
         params = mi.traverse(em)
