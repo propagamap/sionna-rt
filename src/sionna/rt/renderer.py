@@ -162,7 +162,7 @@ def render(scene: rt.Scene,
             scene, sensor=sensor, max_depth=max_depth,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
-            exclude_mesh_ids=exclude_mesh_ids
+            exclude_mesh_ids=exclude_mesh_ids,
         )
         visual_scene = mi.load_dict(visual_scene)
 
@@ -284,6 +284,17 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         integrator["type"] = "path"
     result["integrator"] = integrator
 
+    # --- Custom emitters
+    for i, em in enumerate(scene.mi_scene.emitters()):
+        params = mi.traverse(em)
+        pos = np.array(params['position']).reshape(-1)[:3]
+        intensity = np.array(params['intensity.value']).flat[0]
+        result[f"scene_light_{i}"] = {
+            "type": "point",
+            "position": pos,
+            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
+        }
+
     # --- Environment emitter
     if envmap:
         emitter = {
@@ -303,6 +314,22 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
             }
         }
     result["emitter"] = emitter
+
+    # Propagate non-environment point lights defined in the scene XML.
+    env_em = scene.mi_scene.environment()
+    for i, em in enumerate(scene.mi_scene.emitters()):
+        if em is env_em:
+            continue
+        params = mi.traverse(em)
+        if 'position' not in params or 'intensity.value' not in params:
+            continue
+        pos = np.array(params['position']).reshape(-1)[:3]
+        intensity = float(dr.slice(params['intensity.value'], 0))
+        result[f"scene_light_{i}"] = {
+            "type": "point",
+            "position": pos.tolist(),
+            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
+        }
 
     # --- Visual BSDFs
     bsdfs = {}
