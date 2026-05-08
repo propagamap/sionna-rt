@@ -284,6 +284,17 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         integrator["type"] = "path"
     result["integrator"] = integrator
 
+    # --- Custom emitters
+    for i, em in enumerate(scene.mi_scene.emitters()):
+        params = mi.traverse(em)
+        pos = np.array(params['position']).reshape(-1)[:3]
+        intensity = np.array(params['intensity.value']).flat[0]
+        result[f"scene_light_{i}"] = {
+            "type": "point",
+            "position": pos,
+            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
+        }
+
     # --- Environment emitter
     if envmap:
         emitter = {
