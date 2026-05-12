@@ -284,16 +284,24 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         integrator["type"] = "path"
     result["integrator"] = integrator
 
-    # --- Custom emitters
+    # --- Standard emitters
     for i, em in enumerate(scene.mi_scene.emitters()):
         params = mi.traverse(em)
-        pos = np.array(params['position']).reshape(-1)[:3]
-        intensity = np.array(params['intensity.value']).flat[0]
-        result[f"scene_light_{i}"] = {
-            "type": "point",
-            "position": pos,
-            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
-        }
+        radiance_val = float(np.array(params['radiance.value']).flat[0])
+        shape = em.get_shape()
+        if shape is not None:
+            shape_params = mi.traverse(shape)
+            to_world = mi.ScalarTransform4f(
+                np.array(shape_params['to_world'].matrix).reshape(4, 4))
+            result[f"scene_light_{i}"] = {
+                "type": "rectangle",
+                "to_world": to_world,
+                "emitter": {
+                    "type": "area",
+                    "radiance": {"type": "rgb",
+                                    "value": [radiance_val, radiance_val, radiance_val]},
+                },
+            }
 
     # --- Environment emitter
     if envmap:
