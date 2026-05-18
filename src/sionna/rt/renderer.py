@@ -36,7 +36,8 @@ def render(scene: rt.Scene,
            rm_vmax: float | None = None,
            rm_metric: str = "path_gain",
            envmap: str | None = None,
-           lighting_scale: float = 1.0) -> mi.Bitmap:
+           lighting_scale: float = 1.0,
+           interior: bool = False) -> mi.Bitmap:
     r"""
     Renders two images with path tracing:
     1. Base scene with the meshes
@@ -131,6 +132,12 @@ def render(scene: rt.Scene,
         Scale to apply to the lighting in the scene (whether from a constant
         uniform emitter or a given environment map).
 
+    interior: bool
+        If `True`, the scene is rendered from the inside, with the camera
+        positioned inside a mesh. This is useful for visualizing the interior
+        of buildings or other enclosed spaces.
+        Defaults to `False`.
+
     Output
     -------
     : :class:`~mitsuba.Bitmap`
@@ -163,6 +170,7 @@ def render(scene: rt.Scene,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
             exclude_mesh_ids=exclude_mesh_ids,
+            interior=interior,
         )
         visual_scene = mi.load_dict(visual_scene)
 
@@ -250,7 +258,8 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      clip_plane_orientation: tuple[float, float, float] = (0, 0, -1),
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
-                                     exclude_mesh_ids: set[str] = None) -> dict:
+                                     exclude_mesh_ids: set[str] = None,
+                                     interior: bool = False):
     if dr.size_v(mi.Spectrum) != 3:
         raise ValueError("This function is expected to be run using a" +
                          " rendering-focused Mitsuba variant such as" +
@@ -284,25 +293,6 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         integrator["type"] = "path"
     result["integrator"] = integrator
 
-    # --- Standard emitters
-    for i, em in enumerate(scene.mi_scene.emitters()):
-        params = mi.traverse(em)
-        radiance_val = float(np.array(params['radiance.value']).flat[0])
-        shape = em.get_shape()
-        if shape is not None:
-            shape_params = mi.traverse(shape)
-            to_world = mi.ScalarTransform4f(
-                np.array(shape_params['to_world'].matrix).reshape(4, 4))
-            result[f"scene_light_{i}"] = {
-                "type": "rectangle",
-                "to_world": to_world,
-                "emitter": {
-                    "type": "area",
-                    "radiance": {"type": "rgb",
-                                    "value": [radiance_val, radiance_val, radiance_val]},
-                },
-            }
-
     # --- Environment emitter
     if envmap:
         emitter = {
@@ -322,6 +312,23 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
             }
         }
     result["emitter"] = emitter
+
+    if interior:
+        # --- Area emitter at camera position
+        cam_pos = sensor.world_transform().translation()
+        origin = mi.ScalarPoint3f(cam_pos.x[0], cam_pos.y[0], cam_pos.z[0])
+        result["render_emitter_camera"] = {
+            "type": "sphere",
+            "center": origin,
+            "radius": 1.0,
+            "emitter": {
+                "type": "area",
+                "radiance": {
+                    "type": "rgb",
+                    "value": 20.0
+                }
+            }
+        }
 
     # --- Visual BSDFs
     bsdfs = {}
