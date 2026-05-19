@@ -314,20 +314,47 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
     result["emitter"] = emitter
 
     if interior:
-        # --- Area emitter at camera position
-        cam_pos = sensor.world_transform().translation()
-        origin = mi.ScalarPoint3f(cam_pos.x[0], cam_pos.y[0], cam_pos.z[0])
+        # --- Spot emitter at camera position pointing along the camera's view
+        wt = sensor.world_transform()
+        origin_point = wt @ mi.Point3f(0, 0, 0)
+        forward_point = wt @ mi.Point3f(0, 0, 1)
+        
+        origin = mi.ScalarPoint3f(float(origin_point.x[0]),
+                                  float(origin_point.y[0]),
+                                  float(origin_point.z[0]))
+        target = mi.ScalarPoint3f(float(forward_point.x[0]),
+                                  float(forward_point.y[0]),
+                                  float(forward_point.z[0]))
+
+        # Estimate the depth of visible geometry using ray intersection
+        # For a camera inside the bbox, t_exit is the distance to the bbox
+        # wall in the view direction, which adapts to both position and
+        # orientation.
+        origin_array = np.array([origin.x, origin.y, origin.z])
+        view = np.array([target.x - origin.x,
+                         target.y - origin.y,
+                         target.z - origin.z])   # unit length by construction
+
+        bbox_min = np.array([bbox.min.x, bbox.min.y, bbox.min.z])
+        bbox_max = np.array([bbox.max.x, bbox.max.y, bbox.max.z])
+        
+        t1 = (bbox_min - origin_array) / view
+        t2 = (bbox_max - origin_array) / view
+        
+        t_exit = float(np.min(np.maximum(t1, t2)))  # exit distance along view
+
+        intensity_value = max(t_exit * t_exit, 1.0)
+
         result["render_emitter_camera"] = {
-            "type": "sphere",
-            "center": origin,
-            "radius": 1.0,
-            "emitter": {
-                "type": "area",
-                "radiance": {
-                    "type": "rgb",
-                    "value": 20.0
-                }
-            }
+            "type": "spot",
+            "to_world": mi.ScalarTransform4f().look_at(
+                origin=origin, target=target, up=[0, 0, 1]),
+            "cutoff_angle": 45.0,
+            "beam_width": 30.0,
+            "intensity": {
+                "type": "rgb",
+                "value": intensity_value,
+            },
         }
 
     # --- Visual BSDFs
