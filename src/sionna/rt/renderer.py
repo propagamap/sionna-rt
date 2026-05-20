@@ -315,16 +315,13 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
     if interior:
         # --- Spot emitter at camera position pointing along the camera's view
         wt = sensor.world_transform()
-        
         origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
         target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-    
         origin_scalar = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
         target_scalar = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
-        
         to_world = mi.ScalarTransform4f().look_at(
-                    origin=origin_scalar, 
-                    target=target_scalar, 
+                    origin=origin_scalar,
+                    target=target_scalar,
                     up=[0, 0, 1]
                 )
 
