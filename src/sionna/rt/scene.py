@@ -784,10 +784,9 @@ class Scene:
 
         :param show_orientations: Show orientation of radio devices
         
-        :param interior: If `True`, the scene is rendered from the inside, 
-            with the camera
-            positioned inside a mesh. This is useful for visualizing the interior
-            of buildings or other enclosed spaces.
+        :param interior: bool
+            If `True`, a spot emitter is placed at the camera's origin to
+            illuminate the scene from within.
             Defaults to `False`.
         """
         image = render(

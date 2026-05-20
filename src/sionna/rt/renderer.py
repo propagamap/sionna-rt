@@ -133,9 +133,8 @@ def render(scene: rt.Scene,
         uniform emitter or a given environment map).
 
     interior: bool
-        If `True`, the scene is rendered from the inside, with the camera
-        positioned inside a mesh. This is useful for visualizing the interior
-        of buildings or other enclosed spaces.
+        If `True`, a spot emitter is placed at the camera's origin to
+        illuminate the scene from within.
         Defaults to `False`.
 
     Output
@@ -316,39 +315,31 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
     if interior:
         # --- Spot emitter at camera position pointing along the camera's view
         wt = sensor.world_transform()
-        origin_point = wt @ mi.Point3f(0, 0, 0)
-        forward_point = wt @ mi.Point3f(0, 0, 1)
         
-        origin = mi.ScalarPoint3f(float(origin_point.x[0]),
-                                  float(origin_point.y[0]),
-                                  float(origin_point.z[0]))
-        target = mi.ScalarPoint3f(float(forward_point.x[0]),
-                                  float(forward_point.y[0]),
-                                  float(forward_point.z[0]))
-
-        # Estimate the depth of visible geometry using ray intersection
-        # For a camera inside the bbox, t_exit is the distance to the bbox
-        # wall in the view direction, which adapts to both position and
-        # orientation.
-        origin_array = np.array([origin.x, origin.y, origin.z])
-        view = np.array([target.x - origin.x,
-                         target.y - origin.y,
-                         target.z - origin.z])   # unit length by construction
-
-        bbox_min = np.array([bbox.min.x, bbox.min.y, bbox.min.z])
-        bbox_max = np.array([bbox.max.x, bbox.max.y, bbox.max.z])
+        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
+        target = wt @ mi.Point3f(0.0, 0.0, 1.0)
+    
+        origin_scalar = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
+        target_scalar = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
         
-        t1 = (bbox_min - origin_array) / view
-        t2 = (bbox_max - origin_array) / view
-        
-        t_exit = float(np.min(np.maximum(t1, t2)))  # exit distance along view
+        to_world = mi.ScalarTransform4f().look_at(
+                    origin=origin_scalar, 
+                    target=target_scalar, 
+                    up=[0, 0, 1]
+                )
 
-        intensity_value = max(t_exit * t_exit, 1.0)
+        # Set emitter intensity based on the distance to the farthest point in the scene
+        dx = target_scalar.x - origin_scalar.x
+        dy = target_scalar.y - origin_scalar.y
+        dz = target_scalar.z - origin_scalar.z
+        tx = max((bbox.min.x - origin_scalar.x) / dx, (bbox.max.x - origin_scalar.x) / dx) if dx else float('inf')
+        ty = max((bbox.min.y - origin_scalar.y) / dy, (bbox.max.y - origin_scalar.y) / dy) if dy else float('inf')
+        tz = max((bbox.min.z - origin_scalar.z) / dz, (bbox.max.z - origin_scalar.z) / dz) if dz else float('inf')
+        intensity_value = max(min(tx, ty, tz) ** 2, 1.0)
 
         result["render_emitter_camera"] = {
             "type": "spot",
-            "to_world": mi.ScalarTransform4f().look_at(
-                origin=origin, target=target, up=[0, 0, 1]),
+            "to_world": to_world,
             "cutoff_angle": 45.0,
             "beam_width": 30.0,
             "intensity": {
