@@ -144,25 +144,27 @@ def render(scene: rt.Scene,
     """
     # Spot emitter at camera position pointing along
     # the camera's view on interior scenes.
-    bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
-    wt = camera.world_transform
-    origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
-    camera_pos = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
     to_world = None
     intensity_value = None
-    create_interior_emitter = interior and bbox.contains(camera_pos)
-    if create_interior_emitter:
-        target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-        to_world = mi.ScalarTransform4f().look_at(
-            origin=camera_pos,
-            target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
-            up=[0, 0, 1]
-        )
-        # Cast a ray to find the distance to where it exits the bounding box.
-        ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
-        _, _, far_t = bbox.ray_intersect(ray)
-        distance = far_t[0]
-        intensity_value = max(distance ** 2, 1.0)
+    create_interior_emitter = False
+    if interior:
+        bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
+        wt = camera.world_transform
+        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
+        camera_pos = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
+        create_interior_emitter = bbox.contains(camera_pos)
+        if create_interior_emitter:
+            target = wt @ mi.Point3f(0.0, 0.0, 1.0)
+            to_world = mi.ScalarTransform4f().look_at(
+                origin=camera_pos,
+                target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
+                up=[0, 0, 1]
+            )
+            # Cast a ray to find the distance to where it exits the bounding box.
+            ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
+            _, _, far_t = bbox.ray_intersect(ray)
+            distance = far_t[0]
+            intensity_value = max(distance ** 2, 1.0)
 
     # Use an RGB variant matching the current backend.
     rendering_variant = ("cuda_ad_rgb"
