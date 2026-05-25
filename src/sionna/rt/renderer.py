@@ -142,6 +142,32 @@ def render(scene: rt.Scene,
     : :class:`~mitsuba.Bitmap`
         Rendered image
     """
+    
+    if interior:
+        # Spot emitter at camera position pointing along the camera's view.
+        bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
+        wt = camera.world_transform
+        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
+        target = wt @ mi.Point3f(0.0, 0.0, 1.0)
+
+        # Cast a ray to find the distance to the intersection with the bounding box.
+        ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
+        hit, _, far_t = bbox.ray_intersect(ray)
+
+        if bool(hit[0]):
+            # Distance to where the ray exits the bounding box.
+            distance = far_t[0]
+        else:
+            # Fallback to the scene's diagonal as a distance estimate.
+            distance = dr.norm(bbox.extents())
+                 
+        to_world = mi.ScalarTransform4f().look_at(
+            origin=mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0]),
+            target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
+            up=[0, 0, 1]
+        )
+        intensity_value = max(distance ** 2, 1.0)
+
     # Use an RGB variant matching the current backend.
     rendering_variant = ("cuda_ad_rgb"
                          if dr.backend_v(mi.Float) == dr.JitBackend.CUDA
@@ -170,6 +196,8 @@ def render(scene: rt.Scene,
             envmap=envmap, lighting_scale=lighting_scale,
             exclude_mesh_ids=exclude_mesh_ids,
             interior=interior,
+            interior_emitter_to_world=to_world,
+            interior_emitter_intensity=intensity_value,
         )
         visual_scene = mi.load_dict(visual_scene)
 
@@ -258,7 +286,9 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
                                      exclude_mesh_ids: set[str] = None,
-                                     interior: bool = False):
+                                     interior: bool = False,
+                                     interior_emitter_to_world: mi.ScalarTransform4f | None = None,
+                                     interior_emitter_intensity: float = 1.0):
     if dr.size_v(mi.Spectrum) != 3:
         raise ValueError("This function is expected to be run using a" +
                          " rendering-focused Mitsuba variant such as" +
@@ -313,35 +343,14 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
     result["emitter"] = emitter
 
     if interior:
-        # --- Spot emitter at camera position pointing along the camera's view
-        wt = sensor.world_transform()
-        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
-        target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-        origin_scalar = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
-        target_scalar = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
-        to_world = mi.ScalarTransform4f().look_at(
-                    origin=origin_scalar,
-                    target=target_scalar,
-                    up=[0, 0, 1]
-                )
-
-        # Set emitter intensity based on the distance to the farthest point in the scene
-        dx = target_scalar.x - origin_scalar.x
-        dy = target_scalar.y - origin_scalar.y
-        dz = target_scalar.z - origin_scalar.z
-        tx = max((bbox.min.x - origin_scalar.x) / dx, (bbox.max.x - origin_scalar.x) / dx) if dx else float('inf')
-        ty = max((bbox.min.y - origin_scalar.y) / dy, (bbox.max.y - origin_scalar.y) / dy) if dy else float('inf')
-        tz = max((bbox.min.z - origin_scalar.z) / dz, (bbox.max.z - origin_scalar.z) / dz) if dz else float('inf')
-        intensity_value = max(min(tx, ty, tz) ** 2, 1.0)
-
         result["render_emitter_camera"] = {
             "type": "spot",
-            "to_world": to_world,
+            "to_world": interior_emitter_to_world,
             "cutoff_angle": 45.0,
             "beam_width": 30.0,
             "intensity": {
                 "type": "rgb",
-                "value": intensity_value,
+                "value": interior_emitter_intensity,
             },
         }
 
