@@ -151,7 +151,7 @@ def render(scene: rt.Scene,
         origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
         target = wt @ mi.Point3f(0.0, 0.0, 1.0)
 
-        # Cast a ray to find the distance to the intersection with 
+        # Cast a ray to find the distance to the intersection with
         # the bounding box.
         ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
         hit, _, far_t = bbox.ray_intersect(ray)
@@ -162,7 +162,7 @@ def render(scene: rt.Scene,
         else:
             # Fallback to the scene's diagonal as a distance estimate.
             distance = dr.norm(bbox.extents())
-        
+
         to_world = mi.ScalarTransform4f().look_at(
             origin=mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0]),
             target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
