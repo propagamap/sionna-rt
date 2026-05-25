@@ -5,7 +5,6 @@
 """Rendering module of Sionna RT"""
 
 from __future__ import annotations
-import sys
 
 import drjit as dr
 import mitsuba as mi
@@ -143,7 +142,8 @@ def render(scene: rt.Scene,
     : :class:`~mitsuba.Bitmap`
         Rendered image
     """
-    # Spot emitter at camera position pointing along the camera's view on interior scenes.
+    # Spot emitter at camera position pointing along 
+    # the camera's view on interior scenes.
     bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
     wt = camera.world_transform
     origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
