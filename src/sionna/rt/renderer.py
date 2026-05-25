@@ -5,6 +5,7 @@
 """Rendering module of Sionna RT"""
 
 from __future__ import annotations
+import sys
 
 import drjit as dr
 import mitsuba as mi
@@ -142,32 +143,25 @@ def render(scene: rt.Scene,
     : :class:`~mitsuba.Bitmap`
         Rendered image
     """
+    # Spot emitter at camera position pointing along the camera's view on interior scenes.
+    bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
+    wt = camera.world_transform
+    origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
+    camera_pos = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
     to_world = None
     intensity_value = None
-    if interior:
-        # Spot emitter at camera position pointing along the camera's view.
-        bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
-        wt = camera.world_transform
-        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
+    create_interior_emitter = interior and bbox.contains(camera_pos)
+    if create_interior_emitter:
         target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-
-        # Cast a ray to find the distance to the intersection with
-        # the bounding box.
-        ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
-        hit, _, far_t = bbox.ray_intersect(ray)
-
-        if bool(hit[0]):
-            # Distance to where the ray exits the bounding box.
-            distance = far_t[0]
-        else:
-            # Fallback to the scene's diagonal as a distance estimate.
-            distance = dr.norm(bbox.extents())
-
         to_world = mi.ScalarTransform4f().look_at(
-            origin=mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0]),
+            origin=camera_pos,
             target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
             up=[0, 0, 1]
         )
+        # Cast a ray to find the distance to where it exits the bounding box.
+        ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
+        _, _, far_t = bbox.ray_intersect(ray)
+        distance = far_t[0]
         intensity_value = max(distance ** 2, 1.0)
 
     # Use an RGB variant matching the current backend.
@@ -197,7 +191,7 @@ def render(scene: rt.Scene,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
             exclude_mesh_ids=exclude_mesh_ids,
-            interior=interior,
+            create_interior_emitter=create_interior_emitter,
             interior_emitter_to_world=to_world,
             interior_emitter_intensity=intensity_value,
         )
@@ -288,7 +282,7 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
                                      exclude_mesh_ids: set[str] = None,
-                                     interior: bool = False,
+                                     create_interior_emitter: bool = False,
                                      interior_emitter_to_world: mi.ScalarTransform4f | None = None,
                                      interior_emitter_intensity: float = 1.0):
     if dr.size_v(mi.Spectrum) != 3:
@@ -344,7 +338,7 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         }
     result["emitter"] = emitter
 
-    if interior:
+    if create_interior_emitter:
         result["render_emitter_camera"] = {
             "type": "spot",
             "to_world": interior_emitter_to_world,
