@@ -142,7 +142,7 @@ def render(scene: rt.Scene,
     : :class:`~mitsuba.Bitmap`
         Rendered image
     """
-    # Spot emitter at camera position pointing along 
+    # Spot emitter at camera position pointing along
     # the camera's view on interior scenes.
     bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
     wt = camera.world_transform
