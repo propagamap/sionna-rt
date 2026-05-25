@@ -160,7 +160,8 @@ def render(scene: rt.Scene,
                 target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
                 up=[0, 0, 1]
             )
-            # Cast a ray to find the distance to where it exits the bounding box.
+            # Cast a ray to find the distance to where 
+            # it exits the bounding box.
             ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
             _, _, far_t = bbox.ray_intersect(ray)
             distance = far_t[0]
