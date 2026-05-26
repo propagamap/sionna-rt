@@ -149,15 +149,16 @@ def render(scene: rt.Scene,
     camera_inside_scene = False
     if interior:
         bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
-        cam_pos = mi.ScalarPoint3f(camera.position.x[0], camera.position.y[0], camera.position.z[0])
+        pos = camera.position
+        cam_pos = mi.ScalarPoint3f(pos.x[0], pos.y[0], pos.z[0])
         camera_inside_scene = bbox.contains(cam_pos)
         if camera_inside_scene:
             wt = camera.world_transform
             target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-            scalar_target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
+            target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
             to_world = mi.ScalarTransform4f().look_at(
                 origin=cam_pos,
-                target=scalar_target,
+                target=target,
                 up=[0, 0, 1]
             )
             # Cast a ray to find the distance to where
