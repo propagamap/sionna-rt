@@ -146,23 +146,23 @@ def render(scene: rt.Scene,
     # the camera's view on interior scenes.
     to_world = None
     intensity_value = None
-    create_interior_emitter = False
+    camera_inside_scene = False
     if interior:
         bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
-        wt = camera.world_transform
-        origin = wt @ mi.Point3f(0.0, 0.0, 0.0)
-        camera_pos = mi.ScalarPoint3f(origin.x[0], origin.y[0], origin.z[0])
-        create_interior_emitter = bbox.contains(camera_pos)
-        if create_interior_emitter:
+        cam_pos = mi.ScalarPoint3f(camera.position.x[0], camera.position.y[0], camera.position.z[0])
+        camera_inside_scene = bbox.contains(cam_pos)
+        if camera_inside_scene:
+            wt = camera.world_transform
             target = wt @ mi.Point3f(0.0, 0.0, 1.0)
+            scalar_target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
             to_world = mi.ScalarTransform4f().look_at(
-                origin=camera_pos,
-                target=mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0]),
+                origin=cam_pos,
+                target=scalar_target,
                 up=[0, 0, 1]
             )
             # Cast a ray to find the distance to where
             # it exits the bounding box.
-            ray = mi.Ray3f(o=origin, d=dr.normalize(target - origin))
+            ray = mi.Ray3f(o=cam_pos, d=dr.normalize(target - cam_pos))
             _, _, far_t = bbox.ray_intersect(ray)
             distance = far_t[0]
             intensity_value = max(distance ** 2, 1.0)
@@ -194,7 +194,7 @@ def render(scene: rt.Scene,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
             exclude_mesh_ids=exclude_mesh_ids,
-            create_interior_emitter=create_interior_emitter,
+            camera_inside_scene=camera_inside_scene,
             interior_emitter_to_world=to_world,
             interior_emitter_intensity=intensity_value,
         )
@@ -285,7 +285,7 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
                                      exclude_mesh_ids: set[str] = None,
-                                     create_interior_emitter: bool = False,
+                                     camera_inside_scene: bool = False,
                                      interior_emitter_to_world: mi.ScalarTransform4f | None = None,
                                      interior_emitter_intensity: float = 1.0):
     if dr.size_v(mi.Spectrum) != 3:
@@ -341,7 +341,7 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         }
     result["emitter"] = emitter
 
-    if create_interior_emitter:
+    if camera_inside_scene:
         result["render_emitter_camera"] = {
             "type": "spot",
             "to_world": interior_emitter_to_world,
