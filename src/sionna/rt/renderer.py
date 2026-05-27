@@ -5,6 +5,7 @@
 """Rendering module of Sionna RT"""
 
 from __future__ import annotations
+import sys
 
 import drjit as dr
 import mitsuba as mi
@@ -144,8 +145,8 @@ def render(scene: rt.Scene,
     """
     # Spot emitter at camera position pointing along
     # the camera's view on interior scenes.
-    to_world = None
-    intensity_value = None
+    to_world: mi.ScalarTransform4f | None = None
+    intensity_value: float | None = None
     camera_inside_scene = False
     if interior:
         bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
@@ -156,11 +157,7 @@ def render(scene: rt.Scene,
             wt = camera.world_transform
             target = wt @ mi.Point3f(0.0, 0.0, 1.0)
             target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
-            to_world = mi.ScalarTransform4f().look_at(
-                origin=cam_pos,
-                target=target,
-                up=[0, 0, 1]
-            )
+            to_world = mi.ScalarTransform4f().look_at(cam_pos, target, [0, 0, 1])
             # Cast a ray to find the distance to where
             # it exits the bounding box.
             ray = mi.Ray3f(o=cam_pos, d=dr.normalize(target - cam_pos))
