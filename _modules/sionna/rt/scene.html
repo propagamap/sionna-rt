@@ -1150,6 +1150,8 @@
         <span class="n">clip_plane_orientation</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
         <span class="n">envmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">near_clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">far_clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
         <span class="n">lighting_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
         <span class="n">paths</span><span class="p">:</span> <span class="n">sionna</span><span class="o">.</span><span class="n">rt</span><span class="o">.</span><span class="n">Paths</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1188,6 +1190,16 @@
 <span class="sd">        :param fov: Field of view [deg]. If `None`, the field of view will</span>
 <span class="sd">            default to 45 degrees, unless `camera` is set to `&quot;preview&quot;`, in</span>
 <span class="sd">            which case the field of view of the preview camera is used.</span>
+<span class="sd">            </span>
+<span class="sd">        :param near_clip: Near clipping plane distance. </span>
+<span class="sd">            If `None`, the near clipping plane distance will default to 0.1, </span>
+<span class="sd">            unless `camera` is set to `&quot;preview&quot;`, in which case </span>
+<span class="sd">            the near clipping plane distance of the preview camera is used.</span>
+
+<span class="sd">        :param far_clip: Far clipping plane distance.</span>
+<span class="sd">            If `None`, the far clipping plane distance will default to 10000, </span>
+<span class="sd">            unless `camera` is set to `&quot;preview&quot;`, in which case </span>
+<span class="sd">            the far clipping plane distance of the preview camera is used.</span>
 
 <span class="sd">        :param lighting_scale: Scale to apply to the lighting in the scene</span>
 <span class="sd">            (e.g., from a constant uniform emitter or a given environment map)</span>
@@ -1255,6 +1267,8 @@
             <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">fov</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span>
+            <span class="n">near_clip</span><span class="o">=</span><span class="n">near_clip</span><span class="p">,</span>
+            <span class="n">far_clip</span><span class="o">=</span><span class="n">far_clip</span><span class="p">,</span>
             <span class="n">envmap</span><span class="o">=</span><span class="n">envmap</span><span class="p">,</span>
             <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span>
         <span class="p">)</span>
@@ -1316,6 +1330,8 @@
         <span class="n">clip_plane_orientation</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
         <span class="n">envmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">fov</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">near_clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">far_clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
         <span class="n">lighting_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
         <span class="n">paths</span><span class="p">:</span> <span class="n">sionna</span><span class="o">.</span><span class="n">rt</span><span class="o">.</span><span class="n">Paths</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1355,6 +1371,16 @@
 <span class="sd">        :param fov: Field of view [deg]. If `None`, the field of view will</span>
 <span class="sd">            default to 45 degrees, unless `camera` is set to `&quot;preview&quot;`, in</span>
 <span class="sd">            which case the field of view of the preview camera is used.</span>
+<span class="sd">        </span>
+<span class="sd">        :param near_clip: Near clipping plane distance. </span>
+<span class="sd">            If `None`, the near clipping plane distance will default to 0.1, </span>
+<span class="sd">            unless `camera` is set to `&quot;preview&quot;`, in which case </span>
+<span class="sd">            the near clipping plane distance of the preview camera is used.</span>
+
+<span class="sd">        :param far_clip: Far clipping plane distance.</span>
+<span class="sd">            If `None`, the far clipping plane distance will default to 10000, </span>
+<span class="sd">            unless `camera` is set to `&quot;preview&quot;`, in which case </span>
+<span class="sd">            the far clipping plane distance of the preview camera is used.</span>
 
 <span class="sd">        :param lighting_scale: Scale to apply to the lighting in the scene</span>
 <span class="sd">            (e.g., from a constant uniform emitter or a given environment map)</span>
@@ -1410,6 +1436,8 @@
             <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
             <span class="n">fov</span><span class="o">=</span><span class="n">fov</span><span class="p">,</span>
+            <span class="n">near_clip</span><span class="o">=</span><span class="n">near_clip</span><span class="p">,</span>
+            <span class="n">far_clip</span><span class="o">=</span><span class="n">far_clip</span><span class="p">,</span>
             <span class="n">envmap</span><span class="o">=</span><span class="n">envmap</span><span class="p">,</span>
             <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span>
         <span class="p">)</span>
