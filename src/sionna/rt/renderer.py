@@ -25,8 +25,6 @@ def render(scene: rt.Scene,
            num_samples: int,
            resolution: tuple[int, int],
            fov: float | None = None,
-           near_clip: float = 0.1,
-           far_clip: float = 10000,
            clip_at: float | None = None,
            clip_plane_orientation: tuple[float, float, float] = (0, 0, -1),
            max_depth: int = 8,
@@ -112,18 +110,6 @@ def render(scene: rt.Scene,
         default to 45 degrees, unless `camera` is set to `"preview"`, in
         which case the field of view of the preview camera is used.
 
-    near_clip: float
-        Near clipping plane distance. 
-        If `None`, the near clipping plane distance will default to 0.1, 
-        unless `camera` is set to `"preview"`, in which case 
-        the near clipping plane distance of the preview camera is used.
-
-    far_clip: float
-        Far clipping plane distance.
-        If `None`, the far clipping plane distance will default to 10000, 
-        unless `camera` is set to `"preview"`, in which case 
-        the far clipping plane distance of the preview camera is used.
-
     clip_at: float | None
         If not ``None``, the scene geometry will be clipped (cut) by a plane
         with normal orientation ``clip_plane_orientation`` and offset
@@ -192,8 +178,7 @@ def render(scene: rt.Scene,
         # it would be difficult to track all possible changes to keep
         # `visual_scene` up to date.
         sensor = make_render_sensor(scene, camera=camera, resolution=resolution,
-                                    fov=fov, near_clip=near_clip,
-                                    far_clip=far_clip)
+                                    fov=fov)
         exclude_mesh_ids = set()
 
         rm_is_part_of_scene = False
