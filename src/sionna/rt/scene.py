@@ -536,6 +536,8 @@ class Scene:
         clip_plane_orientation: tuple[float, float, float] = (0,0,-1),
         envmap: str | None = None,
         fov: float | None = None,
+        near_clip: float = 0.1,
+        far_clip: float = 10000,
         lighting_scale: float = 1.0,
         num_samples: int = 128,
         paths: sionna.rt.Paths | None = None,
@@ -575,6 +577,16 @@ class Scene:
         :param fov: Field of view [deg]. If `None`, the field of view will
             default to 45 degrees, unless `camera` is set to `"preview"`, in
             which case the field of view of the preview camera is used.
+            
+        :param near_clip: Near clipping plane distance. 
+            If `None`, the near clipping plane distance will default to 0.1, 
+            unless `camera` is set to `"preview"`, in which case 
+            the near clipping plane distance of the preview camera is used.
+
+        :param far_clip: Far clipping plane distance.
+            If `None`, the far clipping plane distance will default to 10000, 
+            unless `camera` is set to `"preview"`, in which case 
+            the far clipping plane distance of the preview camera is used.
 
         :param lighting_scale: Scale to apply to the lighting in the scene
             (e.g., from a constant uniform emitter or a given environment map)
@@ -647,6 +659,8 @@ class Scene:
             num_samples=num_samples,
             resolution=resolution,
             fov=fov,
+            near_clip=near_clip,
+            far_clip=far_clip,
             envmap=envmap,
             lighting_scale=lighting_scale,
             interior=interior
@@ -706,6 +720,8 @@ class Scene:
         clip_plane_orientation: tuple[float, float, float]=(0,0,-1),
         envmap: str | None = None,
         fov: float | None = None,
+        near_clip: float = 0.1,
+        far_clip: float = 10000,
         lighting_scale: float = 1.0,
         num_samples: int = 512,
         paths: sionna.rt.Paths | None = None,
@@ -746,6 +762,16 @@ class Scene:
         :param fov: Field of view [deg]. If `None`, the field of view will
             default to 45 degrees, unless `camera` is set to `"preview"`, in
             which case the field of view of the preview camera is used.
+            
+        :param near_clip: Near clipping plane distance. 
+            If `None`, the near clipping plane distance will default to 0.1, 
+            unless `camera` is set to `"preview"`, in which case 
+            the near clipping plane distance of the preview camera is used.
+
+        :param far_clip: Far clipping plane distance.
+            If `None`, the far clipping plane distance will default to 10000, 
+            unless `camera` is set to `"preview"`, in which case 
+            the far clipping plane distance of the preview camera is used.
 
         :param lighting_scale: Scale to apply to the lighting in the scene
             (e.g., from a constant uniform emitter or a given environment map)
@@ -806,6 +832,8 @@ class Scene:
             num_samples=num_samples,
             resolution=resolution,
             fov=fov,
+            near_clip=near_clip,
+            far_clip=far_clip,
             envmap=envmap,
             lighting_scale=lighting_scale,
             interior=interior,
