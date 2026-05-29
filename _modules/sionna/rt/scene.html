@@ -431,6 +431,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.simple_street_canyon_with_cars"><code class="docutils literal notranslate"><span class="pre">simple_street_canyon_with_cars</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.simple_wedge"><code class="docutils literal notranslate"><span class="pre">simple_wedge</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.triple_reflector"><code class="docutils literal notranslate"><span class="pre">triple_reflector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.bedroom"><code class="docutils literal notranslate"><span class="pre">bedroom</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.classroom"><code class="docutils literal notranslate"><span class="pre">classroom</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.home_office"><code class="docutils literal notranslate"><span class="pre">home_office</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.living_room"><code class="docutils literal notranslate"><span class="pre">living_room</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/scene.html#sionna.rt.scene.storage_room"><code class="docutils literal notranslate"><span class="pre">storage_room</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/scene.html#built-in-meshes">Built-in meshes</a><ul>
@@ -1166,7 +1171,8 @@
         <span class="n">rm_vmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rm_cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">show_devices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">show_orientations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">show_orientations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">interior</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span> <span class="o">|</span> <span class="n">mi</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">:</span>
         <span class="c1"># pylint: disable=line-too-long</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Renders the scene from the viewpoint of a camera or the interactive viewer</span>
@@ -1248,6 +1254,11 @@
 <span class="sd">        :param show_devices: Show radio devices</span>
 
 <span class="sd">        :param show_orientations: Show orientation of radio devices</span>
+
+<span class="sd">        :param interior: If `True`, the scene is rendered from the inside, with the camera</span>
+<span class="sd">            positioned inside a mesh. This is useful for visualizing the interior</span>
+<span class="sd">            of buildings or other enclosed spaces.</span>
+<span class="sd">            Defaults to `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">render</span><span class="p">(</span>
             <span class="n">scene</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -1270,7 +1281,8 @@
             <span class="n">near_clip</span><span class="o">=</span><span class="n">near_clip</span><span class="p">,</span>
             <span class="n">far_clip</span><span class="o">=</span><span class="n">far_clip</span><span class="p">,</span>
             <span class="n">envmap</span><span class="o">=</span><span class="n">envmap</span><span class="p">,</span>
-            <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span>
+            <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span><span class="p">,</span>
+            <span class="n">interior</span><span class="o">=</span><span class="n">interior</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">return_bitmap</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">image</span>
@@ -1343,7 +1355,8 @@
         <span class="n">rm_vmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rm_vmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">show_devices</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">show_orientations</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">show_orientations</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">interior</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">:</span>
         <span class="c1"># pylint: disable=line-too-long</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Renders the scene from the viewpoint of a camera or the interactive</span>
@@ -1418,6 +1431,11 @@
 <span class="sd">        :param show_devices: Show radio devices</span>
 
 <span class="sd">        :param show_orientations: Show orientation of radio devices</span>
+<span class="sd">        </span>
+<span class="sd">        :param interior: bool</span>
+<span class="sd">            If `True`, a spot emitter is placed at the camera&#39;s origin to</span>
+<span class="sd">            illuminate the scene from within.</span>
+<span class="sd">            Defaults to `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">render</span><span class="p">(</span>
             <span class="n">scene</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -1439,7 +1457,8 @@
             <span class="n">near_clip</span><span class="o">=</span><span class="n">near_clip</span><span class="p">,</span>
             <span class="n">far_clip</span><span class="o">=</span><span class="n">far_clip</span><span class="p">,</span>
             <span class="n">envmap</span><span class="o">=</span><span class="n">envmap</span><span class="p">,</span>
-            <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span>
+            <span class="n">lighting_scale</span><span class="o">=</span><span class="n">lighting_scale</span><span class="p">,</span>
+            <span class="n">interior</span><span class="o">=</span><span class="n">interior</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -1988,6 +2007,51 @@
 <span class="sd">Example scene containing three metallic rectangles</span>
 
 <span class="sd">.. figure:: ../figures/triple_reflector.png</span>
+<span class="sd">   :align: center</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">bedroom</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">scenes</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;bedroom/bedroom.xml&quot;</span><span class="p">))</span>
+<span class="c1"># pylint: disable=C0301</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example scene containing a bedroom</span>
+
+<span class="sd">.. figure:: ../figures/bedroom.png</span>
+<span class="sd">   :align: center</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">classroom</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">scenes</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;classroom/classroom.xml&quot;</span><span class="p">))</span>
+<span class="c1"># pylint: disable=C0301</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example scene containing a classroom</span>
+
+<span class="sd">.. figure:: ../figures/classroom.png</span>
+<span class="sd">   :align: center</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">home_office</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">scenes</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;home_office/home_office.xml&quot;</span><span class="p">))</span>
+<span class="c1"># pylint: disable=C0301</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example scene containing a home office</span>
+
+<span class="sd">.. figure:: ../figures/home_office.png</span>
+<span class="sd">   :align: center</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">living_room</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">scenes</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;living_room/living_room.xml&quot;</span><span class="p">))</span>
+<span class="c1"># pylint: disable=C0301</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example scene containing a living room</span>
+
+<span class="sd">.. figure:: ../figures/living_room.png</span>
+<span class="sd">   :align: center</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">storage_room</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">files</span><span class="p">(</span><span class="n">scenes</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;storage_room/storage_room.xml&quot;</span><span class="p">))</span>
+<span class="c1"># pylint: disable=C0301</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example scene containing a storage room</span>
+
+<span class="sd">.. figure:: ../figures/storage_room.png</span>
 <span class="sd">   :align: center</span>
 <span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
