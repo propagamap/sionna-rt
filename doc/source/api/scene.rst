@@ -87,6 +87,31 @@ They can be loaded and used as follows:
 
 (`Blender file <https://drive.google.com/file/d/1l95_0U2b3cEVtz3G8mQxuLxy8xiPsVID/view?usp=share_link>`__)
 
+.. autodata:: sionna.rt.scene.bedroom
+   :annotation:
+
+(`Blender file <https://drive.google.com/file/d/1_a917J-1fLmFBq-5L9en6dW-w5AuuwTF/view?usp=share_link>`__)
+
+.. autodata:: sionna.rt.scene.classroom
+   :annotation:
+
+(`Blender file <https://drive.google.com/file/d/1_RlAD_kum2zsHw66GJ8tBG8VvkusOnqO/view?usp=share_link>`__)
+
+.. autodata:: sionna.rt.scene.home_office
+   :annotation:
+
+(`Blender file <https://drive.google.com/file/d/15GgQrMw32YW7SorZwCk0wntBiEkERYZy/view?usp=share_link>`__)
+
+.. autodata:: sionna.rt.scene.living_room
+   :annotation:
+
+(`Blender file <https://drive.google.com/file/d/1soYeduRiqRwjVXgyS72yq7CWkBPngM4a/view?usp=share_link>`__)
+
+.. autodata:: sionna.rt.scene.storage_room
+   :annotation:
+
+(`Blender file <https://drive.google.com/file/d/13e8IizHMpvl7wQrk6g-w30_xNRKjivuZ/view?usp=share_link>`__)
+
 Built-in meshes
 ---------------
 

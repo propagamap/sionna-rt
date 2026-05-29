@@ -552,7 +552,8 @@ class Scene:
         rm_vmin: float | None = None,
         rm_cmap: str | callable | None = None,
         show_devices: bool = True,
-        show_orientations: bool = False
+        show_orientations: bool = False,
+        interior: bool = False
     ) -> plt.Figure | mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive viewer
@@ -634,6 +635,11 @@ class Scene:
         :param show_devices: Show radio devices
 
         :param show_orientations: Show orientation of radio devices
+
+        :param interior: If `True`, the scene is rendered from the inside, with the camera
+            positioned inside a mesh. This is useful for visualizing the interior
+            of buildings or other enclosed spaces.
+            Defaults to `False`.
         """
         image = render(
             scene=self,
@@ -656,7 +662,8 @@ class Scene:
             near_clip=near_clip,
             far_clip=far_clip,
             envmap=envmap,
-            lighting_scale=lighting_scale
+            lighting_scale=lighting_scale,
+            interior=interior
         )
         if return_bitmap:
             return image
@@ -726,7 +733,8 @@ class Scene:
         rm_vmin: float | None=None,
         rm_vmax: float | None=None,
         show_devices: bool=True,
-        show_orientations: bool=True
+        show_orientations: bool=True,
+        interior: bool = False
     ) -> mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive
@@ -801,6 +809,11 @@ class Scene:
         :param show_devices: Show radio devices
 
         :param show_orientations: Show orientation of radio devices
+        
+        :param interior: bool
+            If `True`, a spot emitter is placed at the camera's origin to
+            illuminate the scene from within.
+            Defaults to `False`.
         """
         image = render(
             scene=self,
@@ -822,7 +835,8 @@ class Scene:
             near_clip=near_clip,
             far_clip=far_clip,
             envmap=envmap,
-            lighting_scale=lighting_scale
+            lighting_scale=lighting_scale,
+            interior=interior,
         )
 
         ext = os.path.splitext(filename)[1].lower()
@@ -1354,5 +1368,50 @@ r"""
 Example scene containing three metallic rectangles
 
 .. figure:: ../figures/triple_reflector.png
+   :align: center
+"""
+
+bedroom = str(files(scenes).joinpath("bedroom/bedroom.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a bedroom
+
+.. figure:: ../figures/bedroom.png
+   :align: center
+"""
+
+classroom = str(files(scenes).joinpath("classroom/classroom.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a classroom
+
+.. figure:: ../figures/classroom.png
+   :align: center
+"""
+
+home_office = str(files(scenes).joinpath("home_office/home_office.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a home office
+
+.. figure:: ../figures/home_office.png
+   :align: center
+"""
+
+living_room = str(files(scenes).joinpath("living_room/living_room.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a living room
+
+.. figure:: ../figures/living_room.png
+   :align: center
+"""
+
+storage_room = str(files(scenes).joinpath("storage_room/storage_room.xml"))
+# pylint: disable=C0301
+r"""
+Example scene containing a storage room
+
+.. figure:: ../figures/storage_room.png
    :align: center
 """
