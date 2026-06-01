@@ -47,7 +47,7 @@ class ITURadioMaterial(RadioMaterial):
     :param xpd_coefficient:  Cross-polarization discrimination coefficient :math:`K_x\in[0,1]` as defined in :eq:`xpd`. Only relevant if ``scattering_coefficient`` is not equal to zero. Ignored if ``props`` is provided.
     :param scattering_pattern: Scattering pattern to use for diffuse reflection. Only relevant if ``scattering_coefficient`` is not equal to zero. Ignored if ``props`` is provided. Defaults to :func:`~sionna.rt.lambertian_pattern`.
     :param color: RGB (red, green, blue) color for the radio material as displayed in the previewer and renderer. Each RGB component must have a value within the range :math:`[0,1]`. If set to :py:class:`None`, then a random color is used.
-    :param forced_freq_range: Forces the use of the parameters corresponding to the given frequency range (in GHz) when evaluating the material properties. This can be used to evaluate the material properties at frequencies for which there is more than one defined range with different properties.
+    :param forced_freq_range: Forces the use of the parameters corresponding to the given frequency range [GHz] when evaluating the material properties. This can be used to evaluate the material properties at frequencies for which there is more than one defined range with different properties.
     :param props: Mitsuba container storing the material properties, and used when loading a scene to initialize the radio material.
     """
 

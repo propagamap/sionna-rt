@@ -84,8 +84,7 @@ Moreover, by default, the scattering coefficient, :math:`S`, of these materials 
 
    The three ground materials — ``very_dry_ground``, ``medium_dry_ground``,
    and ``wet_ground`` — are an exception: they are defined only over
-   1 -- 10 GHz, and a :py:exc:`ValueError` is raised if the frequency is
-   outside this interval.
+   1 -- 10 GHz, and these limits must not be exceeded (:cite:p:`ITURP20404`).
 
    When a material has multiple overlapping frequency ranges (e.g.
    ``plasterboard`` at 150 GHz matches both the 110 -- 330 GHz and the

@@ -109,8 +109,10 @@ def itu_material(
     :param name: Name of the ITU material to evaluate.
         Must be a key of `ITU_MATERIALS_PROPERTIES`.
     :param f: Frequency [Hz]
-    :param forced_freq_range: Forces the use of the parameters
-        corresponding to the given frequency range (in GHz).
+    :param forced_freq_range: Forces the use of the parameters corresponding to 
+        the given frequency range [GHz] when evaluating the material properties. 
+        This can be used to evaluate the material properties at frequencies for 
+        which there is more than one defined range with different properties.
         Must be a key of `ITU_MATERIALS_PROPERTIES[name]`.
 
     :return: Real component of the relative permittivity and conductivity [S/m]
