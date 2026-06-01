@@ -36,7 +36,8 @@ def render(scene: rt.Scene,
            rm_vmax: float | None = None,
            rm_metric: str = "path_gain",
            envmap: str | None = None,
-           lighting_scale: float = 1.0) -> mi.Bitmap:
+           lighting_scale: float = 1.0,
+           interior: bool = False) -> mi.Bitmap:
     r"""
     Renders two images with path tracing:
     1. Base scene with the meshes
@@ -131,11 +132,40 @@ def render(scene: rt.Scene,
         Scale to apply to the lighting in the scene (whether from a constant
         uniform emitter or a given environment map).
 
+    interior: bool
+        If `True`, a spot emitter is placed at the camera's origin to
+        illuminate the scene from within.
+        Defaults to `False`.
+
     Output
     -------
     : :class:`~mitsuba.Bitmap`
         Rendered image
     """
+    # Spot emitter at camera position pointing along
+    # the camera's view on interior scenes.
+    to_world: mi.ScalarTransform4f | None = None
+    intensity_value: float | None = None
+    camera_inside_scene = False
+    if interior:
+        bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
+        pos = camera.position
+        cam_pos = mi.ScalarPoint3f(pos.x[0], pos.y[0], pos.z[0])
+        camera_inside_scene = bbox.contains(cam_pos)
+        if camera_inside_scene:
+            wt = camera.world_transform
+            target = wt @ mi.Point3f(0.0, 0.0, 1.0)
+            target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
+            to_world = mi.ScalarTransform4f().look_at(
+                cam_pos, target, [0, 0, 1]
+                )
+            # Cast a ray to find the distance to where
+            # it exits the bounding box.
+            ray = mi.Ray3f(o=cam_pos, d=dr.normalize(target - cam_pos))
+            _, _, far_t = bbox.ray_intersect(ray)
+            distance = far_t[0]
+            intensity_value = max(distance ** 2, 1.0)
+
     # Use an RGB variant matching the current backend.
     rendering_variant = ("cuda_ad_rgb"
                          if dr.backend_v(mi.Float) == dr.JitBackend.CUDA
@@ -163,6 +193,9 @@ def render(scene: rt.Scene,
             clip_at=clip_at, clip_plane_orientation=clip_plane_orientation,
             envmap=envmap, lighting_scale=lighting_scale,
             exclude_mesh_ids=exclude_mesh_ids,
+            camera_inside_scene=camera_inside_scene,
+            interior_emitter_to_world=to_world,
+            interior_emitter_intensity=intensity_value,
         )
         visual_scene = mi.load_dict(visual_scene)
 
@@ -250,7 +283,10 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
                                      clip_plane_orientation: tuple[float, float, float] = (0, 0, -1),
                                      envmap: str | None = None,
                                      lighting_scale: float = 1.0,
-                                     exclude_mesh_ids: set[str] = None) -> dict:
+                                     exclude_mesh_ids: set[str] = None,
+                                     camera_inside_scene: bool = False,
+                                     interior_emitter_to_world: mi.ScalarTransform4f | None = None,
+                                     interior_emitter_intensity: float = 1.0):
     if dr.size_v(mi.Spectrum) != 3:
         raise ValueError("This function is expected to be run using a" +
                          " rendering-focused Mitsuba variant such as" +
@@ -284,17 +320,6 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         integrator["type"] = "path"
     result["integrator"] = integrator
 
-    # --- Custom emitters
-    for i, em in enumerate(scene.mi_scene.emitters()):
-        params = mi.traverse(em)
-        pos = np.array(params['position']).reshape(-1)[:3]
-        intensity = np.array(params['intensity.value']).flat[0]
-        result[f"scene_light_{i}"] = {
-            "type": "point",
-            "position": pos,
-            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
-        }
-
     # --- Environment emitter
     if envmap:
         emitter = {
@@ -315,20 +340,16 @@ def visual_scene_from_wireless_scene(scene: rt.Scene,
         }
     result["emitter"] = emitter
 
-    # Propagate non-environment point lights defined in the scene XML.
-    env_em = scene.mi_scene.environment()
-    for i, em in enumerate(scene.mi_scene.emitters()):
-        if em is env_em:
-            continue
-        params = mi.traverse(em)
-        if 'position' not in params or 'intensity.value' not in params:
-            continue
-        pos = np.array(params['position']).reshape(-1)[:3]
-        intensity = float(dr.slice(params['intensity.value'], 0))
-        result[f"scene_light_{i}"] = {
-            "type": "point",
-            "position": pos.tolist(),
-            "intensity": {"type": "rgb", "value": [intensity, intensity, intensity]},
+    if camera_inside_scene:
+        result["render_emitter_camera"] = {
+            "type": "spot",
+            "to_world": interior_emitter_to_world,
+            "cutoff_angle": 45.0,
+            "beam_width": 30.0,
+            "intensity": {
+                "type": "rgb",
+                "value": interior_emitter_intensity,
+            },
         }
 
     # --- Visual BSDFs
