@@ -81,7 +81,7 @@ repository's root directory.
 
 ## License and Citation
 
-Sionna RT is Apache-2.0 licensed, as found in the [LICENSE](https://github.com/nvlabs/sionna-rt/blob/main/LICENSE) file.
+Sionna RT is Apache-2.0 licensed, as found in the [LICENSE](https://github.com/propagamap/sionna-rt/blob/main/LICENSE) file.
 
 If you use this software, please cite it as:
 ```bibtex
