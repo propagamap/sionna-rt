@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -8,9 +8,11 @@ where = ["src"]
 [tool.setuptools.package-data]
 "sionna.rt" = ["**/*.csv", "**/*.npy", "**/*.json", "**/*.xml", "**/*.ply"]
 
+[tool.setuptools_scm]
+
 [project]
 name = "sionna-rt-propasim"
-version = "1.0.0"
+dynamic = ["version"]
 description = "Sionna RT - A hardware-accelerated differentiable ray tracer for radio propagation modeling"
 readme = "README.md"
 license = {text = "Apache-2.0"}
