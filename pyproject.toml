@@ -17,7 +17,7 @@ description = "Sionna RT - A hardware-accelerated differentiable ray tracer for 
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [
-    { name = "The Sionna contributors", email = "sionna@nvidia.com" },
+    { name = "The Sionna contributors" },
     { name = "PROPASIM contributors" }
 ]
 keywords = [
