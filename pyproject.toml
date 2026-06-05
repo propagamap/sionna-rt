@@ -9,7 +9,7 @@ where = ["src"]
 "sionna.rt" = ["**/*.csv", "**/*.npy", "**/*.json", "**/*.xml", "**/*.ply"]
 
 [project]
-name = "sionna-rt-propasim"
+name = "sionna-rt"
 version = "1.0.0"
 description = "Sionna RT - A hardware-accelerated differentiable ray tracer for radio propagation modeling"
 readme = "README.md"

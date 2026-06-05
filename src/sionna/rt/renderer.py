@@ -37,7 +37,10 @@ def render(scene: rt.Scene,
            rm_metric: str = "path_gain",
            envmap: str | None = None,
            lighting_scale: float = 1.0,
-           interior: bool = False) -> mi.Bitmap:
+           interior: bool = False,
+           path_filter: dict | None = None,
+           path_colors: dict[int, list[float]] | None = None,
+           excluded_devices: set[str] | None = None) -> mi.Bitmap:
     r"""
     Renders two images with path tracing:
     1. Base scene with the meshes
@@ -137,6 +140,24 @@ def render(scene: rt.Scene,
         illuminate the scene from within.
         Defaults to `False`.
 
+    path_filter: dict[str, int | tuple[float, float]] | `None`
+        If not `None`, paths not matching the filter are not shown.
+        See :func:`~sionna.rt.utils.is_path_filtered` for the accepted keys.
+        Defaults to `None`.
+
+    path_colors: dict[int, list[float]] | `None`
+        If not `None`, overrides the default per-interaction-type colors used
+        to draw the paths. The key ``0`` is used for the line-of-sight color,
+        and the :class:`~sionna.rt.constants.InteractionType` values for the
+        corresponding interaction colors.
+        Defaults to `None`.
+
+    excluded_devices: set[str] | `None`
+        Names of the radio devices (transmitters/receivers) to hide. Their
+        markers and the paths originating from or arriving at them are not
+        shown.
+        Defaults to `None`.
+
     Output
     -------
     : :class:`~mitsuba.Bitmap`
@@ -210,7 +231,9 @@ def render(scene: rt.Scene,
             radio_map=radio_map,
             rm_tx=rm_tx, rm_db_scale=rm_db_scale,
             rm_cmap=rm_cmap, rm_vmin=rm_vmin, rm_vmax=rm_vmax,
-            rm_metric=rm_metric
+            rm_metric=rm_metric,
+            path_filter=path_filter, path_colors=path_colors,
+            excluded_devices=excluded_devices
         )
         if not overlay_scene:
             # Won't need to composite anything, we can just return right away.
@@ -383,7 +406,13 @@ def get_overlay_scene(scene: rt.Scene, sensor: mi.Sensor, paths: any | None = No
                       rm_tx: int | str | None = None, rm_db_scale: bool = True,
                       rm_cmap: str | callable | None = None,
                       rm_vmin: float | None = None, rm_vmax: float | None = None,
-                      rm_metric: str = "path_gain") -> dict:
+                      rm_metric: str = "path_gain",
+                      path_filter: dict[str, int | tuple[float, float]] | None = None,
+                      path_colors: dict[int, list[float]] | None = None,
+                      excluded_devices: set[str] | None = None) -> dict:
+    if excluded_devices is None:
+        excluded_devices = set()
+
     result = {
         "type": "scene",
         "sensor": sensor,
@@ -404,6 +433,8 @@ def get_overlay_scene(scene: rt.Scene, sensor: mi.Sensor, paths: any | None = No
             continue
 
         for name, rd in devices.items():
+            if name in excluded_devices:
+                continue
             key = f'rd-{prefix}-{name}'
             if rd.display_radius is not None:
                 display_radius = rd.display_radius
@@ -441,7 +472,19 @@ def get_overlay_scene(scene: rt.Scene, sensor: mi.Sensor, paths: any | None = No
 
     # --- Paths, shown as cylinders (the closest we have to lines)
     if paths is not None:
-        starts, ends, colors = paths_to_segments(paths)
+        # Map excluded device names to sets of source/target indices
+        src_filtered = set()
+        tgt_filtered = set()
+        for i, name in enumerate(scene.transmitters.keys()):
+            if name in excluded_devices:
+                src_filtered.add(i)
+        for i, name in enumerate(scene.receivers.keys()):
+            if name in excluded_devices:
+                tgt_filtered.add(i)
+
+        starts, ends, colors = paths_to_segments(
+            paths, path_filter=path_filter, path_colors=path_colors,
+            src_filtered=src_filtered, tgt_filtered=tgt_filtered)
 
         radius = min(0.20, 0.005 * sc)
         for i, (s, e, c) in enumerate(zip(starts, ends, colors)):

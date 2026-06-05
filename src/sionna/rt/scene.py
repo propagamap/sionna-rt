@@ -551,7 +551,10 @@ class Scene:
         rm_cmap: str | callable | None = None,
         show_devices: bool = True,
         show_orientations: bool = False,
-        interior: bool = False
+        interior: bool = False,
+        path_filter: dict[str, int | tuple[float, float]] | None = None,
+        path_colors: dict[int, list[float]] | None = None,
+        excluded_devices: set[str] | None = None
     ) -> plt.Figure | mi.Bitmap:
         # pylint: disable=line-too-long
         r"""Renders the scene from the viewpoint of a camera or the interactive viewer
@@ -628,6 +631,21 @@ class Scene:
             positioned inside a mesh. This is useful for visualizing the interior
             of buildings or other enclosed spaces.
             Defaults to `False`.
+
+        :param path_filter: Optional ``dict[str, int | tuple[float, float]]``
+            filtering the shown paths. Paths not matching the filter are hidden.
+            See :func:`~sionna.rt.utils.is_path_filtered` for the accepted keys.
+
+        :param path_colors: Optional ``dict[int, list[float]]`` mapping
+            overriding the default per
+            interaction-type colors used to draw the paths. The key ``0`` is
+            used for the line-of-sight color, and the
+            :class:`~sionna.rt.constants.InteractionType` values for the
+            corresponding interaction colors.
+
+        :param excluded_devices: Optional set of radio device names to hide.
+            Their markers and the paths originating from or arriving at them
+            are not shown.
         """
         image = render(
             scene=self,
@@ -649,7 +667,10 @@ class Scene:
             fov=fov,
             envmap=envmap,
             lighting_scale=lighting_scale,
-            interior=interior
+            interior=interior,
+            path_filter=path_filter,
+            path_colors=path_colors,
+            excluded_devices=excluded_devices
         )
         if return_bitmap:
             return image

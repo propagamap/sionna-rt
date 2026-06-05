@@ -147,7 +147,34 @@ def make_render_sensor(
     return mi.load_dict(props)
 
 
-def paths_to_segments(paths: rt.Paths):
+def is_path_filtered(type_bounces: np.ndarray, path_filter: dict) -> bool:
+    r"""
+    Returns `True` if the path with interaction types ``type_bounces`` should
+    be discarded according to ``path_filter``.
+
+    ``path_filter`` is a dict with the optional keys:
+    ``discard`` (int bitmask of :class:`~sionna.rt.constants.InteractionType`
+    values to forbid), ``require`` (int bitmask of interaction types that must
+    all be present), ``n_bounces`` (``(min, max)`` range of interactions), and
+    ``phi_r``/``phi_t``/``theta_r``/``theta_t`` (``(min, max)`` angle ranges).
+    """
+    bounces = np.count_nonzero(type_bounces)
+    if "n_bounces" in path_filter:
+        lower, upper = path_filter["n_bounces"]
+        if bounces < lower or bounces > upper:
+            return True
+
+    # Bitwise check for bounce types
+    bitwise_bounces: int = np.bitwise_or.reduce(type_bounces).item()
+    return (path_filter["discard"] & bitwise_bounces) != 0 or \
+           (path_filter["require"] & ~bitwise_bounces) != 0
+
+
+def paths_to_segments(paths: rt.Paths,
+                      path_filter: dict | None = None,
+                      path_colors: dict[int, list[float]] | None = None,
+                      src_filtered: set[int] | None = None,
+                      tgt_filtered: set[int] | None = None):
     r"""
     Extracts the segments corresponding to a set of ``paths``
 
@@ -156,20 +183,47 @@ def paths_to_segments(paths: rt.Paths):
     paths: :class:`~sionna.rt.Paths`
         Paths to plot
 
+    path_filter: dict[str, int | tuple[float, float]] | `None`
+        If not `None`, paths not matching the filter are discarded.
+        See :func:`is_path_filtered` for the accepted keys.
+
+    path_colors: dict[int, list[float]] | `None`
+        If not `None`, overrides the default per-interaction-type colors.
+        The key ``0`` is used for the line-of-sight color, and the
+        :class:`~sionna.rt.constants.InteractionType` values for the
+        corresponding interaction colors.
+
+    src_filtered, tgt_filtered: set[int] | `None`
+        Indices of the transmitters (sources) and receivers (targets) whose
+        paths should be discarded.
+
     Output
     -------
     starts, ends: [n,3], float
         Endpoints of the segments making the paths.
+
+    colors: [n,3], float
+        Color of each segment.
     """
+    if src_filtered is None:
+        src_filtered = set()
+    if tgt_filtered is None:
+        tgt_filtered = set()
+
+    def los_color():
+        if path_colors is not None and 0 in path_colors:
+            return path_colors[0]
+        return LOS_COLOR
+
+    def interaction_color(t):
+        if path_colors is not None and t in path_colors:
+            return path_colors[t]
+        return INTERACTION_TYPE_TO_COLOR[t]
 
     vertices = paths.vertices.numpy()
     valid = paths.valid.numpy()
     types = paths.interactions.numpy()
     max_depth = vertices.shape[0]
-
-    num_paths = vertices.shape[-2]
-    if num_paths == 0:
-        return # Nothing to do
 
     # Build sources and targets
     src_positions, tgt_positions = paths.sources, paths.targets
@@ -178,6 +232,17 @@ def paths_to_segments(paths: rt.Paths):
 
     num_src = src_positions.shape[0]
     num_tgt = tgt_positions.shape[0]
+
+    rx_array_size = paths.rx_array.array_size
+    tx_array_size = paths.tx_array.array_size
+
+    # Optional angle-based filtering of paths
+    if path_filter is not None:
+        for name in ("phi_r", "phi_t", "theta_r", "theta_t"):
+            if name in path_filter:
+                lower, upper = path_filter[name]
+                angle_arr = getattr(paths, name).numpy()
+                valid &= np.logical_and(angle_arr >= lower, angle_arr <= upper)
 
     # Merge device and antenna dimensions if required
     if not paths.synthetic_array:
@@ -235,14 +300,26 @@ def paths_to_segments(paths: rt.Paths):
     starts = []
     ends = []
     colors = []
+
+    num_paths = vertices.shape[-2]
+    if num_paths == 0:
+        return starts, ends, colors # Nothing to do
+
     for rx in range(num_tgt): # For each receiver
+        if (rx // rx_array_size) in tgt_filtered:
+            continue
         for tx in range(num_src): # For each transmitter
+            if (tx // tx_array_size) in src_filtered:
+                continue
             for p in range(num_paths): # For each path
                 if not valid[rx, tx, p]:
                     continue
+                if path_filter is not None and \
+                   is_path_filtered(types[:, rx, tx, p], path_filter):
+                    continue
                 start = src_positions[tx]
                 i = 0
-                color = LOS_COLOR
+                color = los_color()
                 while i < max_depth:
                     t = types[i, rx, tx, p]
                     if t == InteractionType.NONE:
@@ -252,7 +329,7 @@ def paths_to_segments(paths: rt.Paths):
                     ends.append(end)
                     colors.append(color)
                     start = end
-                    color = INTERACTION_TYPE_TO_COLOR[t]
+                    color = interaction_color(t)
                     i += 1
                 # Explicitly add the path endpoint
                 starts.append(start)
