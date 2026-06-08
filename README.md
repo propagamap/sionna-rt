@@ -4,7 +4,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 # Sionna RT: The Ray Tracing Package of Sionna&trade;
 
-[Sionna RT](https://nvlabs.github.io/sionna-rt) is the stand-alone ray tracing package of the [Sionna&trade; Library for Research
+[Sionna RT](https://propagamap.github.io/sionna-rt) is the stand-alone ray tracing package of the [Sionna&trade; Library for Research
 on Communication Systems](https://github.com/NVlabs/sionna).
 It is built on top of [Mitsuba 3](https://github.com/mitsuba-renderer/mitsuba3) and is interoperable with
 [TensorFlow](https://www.tensorflow.org/), [PyTorch](https://pytorch.org/), and [JAX](https://jax.readthedocs.io/en/latest/index.html).
@@ -67,7 +67,7 @@ python -m http.server --dir build/html
 
 ## For Developers
 
-The documentation of Sionna RT includes [developer guides](https://nvlabs.github.io/sionna/rt/developer/developer.html)
+The documentation of Sionna RT includes [developer guides](https://propagamap.github.io/sionna-rt/developer/developer.html)
 explaining how to extend it with custom antenna patterns, radio materials, etc.
 
 Development requirements can be installed by executing from the repository's root directory:
@@ -81,14 +81,14 @@ repository's root directory.
 
 ## License and Citation
 
-Sionna RT is Apache-2.0 licensed, as found in the [LICENSE](https://github.com/nvlabs/sionna-rt/blob/main/LICENSE) file.
+Sionna RT is Apache-2.0 licensed, as found in the [LICENSE](https://github.com/propagamap/sionna-rt/blob/main/LICENSE) file.
 
 If you use this software, please cite it as:
 ```bibtex
 @software{sionna,
  title = {Sionna},
  author = {Hoydis, Jakob and Cammerer, Sebastian and {Ait Aoudia}, Fayçal and Nimier-David, Merlin and Maggi, Lorenzo and Marcus, Guillermo and Vem, Avinash and Keller, Alexander},
- note = {https://nvlabs.github.io/sionna/},
+ note = {https://propagamap.github.io/sionna-rt/},
  year = {2022},
  version = {2.0.1}
 }

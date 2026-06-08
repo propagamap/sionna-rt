@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -8,14 +8,17 @@ where = ["src"]
 [tool.setuptools.package-data]
 "sionna.rt" = ["**/*.csv", "**/*.npy", "**/*.json", "**/*.xml", "**/*.ply"]
 
+[tool.setuptools_scm]
+
 [project]
-name = "sionna-rt"
-version = "2.0.1"
+name = "sionna-rt-propasim"
+dynamic = ["version"]
 description = "Sionna RT - A hardware-accelerated differentiable ray tracer for radio propagation modeling"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [
-    { name = "The Sionna contributors", email = "sionna@nvidia.com" }
+    { name = "The Sionna contributors" },
+    { name = "PROPASIM contributors" }
 ]
 keywords = [
     "ray tracing",
@@ -48,9 +51,9 @@ dependencies = [
 ]
 
 [project.urls]
-source = "https://github.com/nvlabs/sionna-rt/"
-documentation = "https://nvlabs.github.io/sionna/"
-issues = "https://github.com/nvlabs/sionna/issues"
+source = "https://github.com/propagamap/sionna-rt/"
+documentation = "https://propagamap.github.io/sionna-rt/"
+issues = "https://github.com/propagamap/sionna-rt/issues"
 
 [project.optional-dependencies]
 doc = [
