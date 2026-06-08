@@ -3,7 +3,7 @@
 ## SPDX-License-Identifier: Apache-2.0
 ##
 
-name: "Create Release and Publish to PyPI"
+name: "Publish to PyPI"
 
 on:
   release:
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/sionna-rt-propasim
+      url: https://test.pypi.org/p/sionna-rt-propasim
     steps:
       - name: Download distribution artifacts
         uses: actions/download-artifact@v8
@@ -56,3 +56,5 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
