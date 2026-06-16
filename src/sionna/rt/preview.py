@@ -405,8 +405,9 @@ class Previewer:
         tensor = radio_map.transmitter_radio_map(metric, tx)
         tensor = tensor.numpy()
 
-        # Mask for discarding empty cells
-        non_zero_mask = tensor > 0.
+        # Mask for discarding empty cells. These are zero-valued
+        # for path gain, RSS, and SINR, and infinite for path loss.
+        non_zero_mask = np.logical_and(tensor > 0., np.isfinite(tensor))
         if not np.any(non_zero_mask):
             return
 
@@ -473,8 +474,9 @@ class Previewer:
         tensor = radio_map.transmitter_radio_map(metric, tx)
         tensor = tensor.numpy()
 
-        # Mask for discarding empty cells
-        non_zero_mask = tensor > 0.
+        # Mask for discarding empty cells. These are zero-valued
+        # for path gain, RSS, and SINR, and infinite for path loss.
+        non_zero_mask = np.logical_and(tensor > 0., np.isfinite(tensor))
         if not np.any(non_zero_mask):
             return
 

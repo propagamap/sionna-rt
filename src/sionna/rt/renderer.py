@@ -95,7 +95,7 @@ def render(scene: rt.Scene,
         If set to None, then covers the complete range.
         Defaults to `None`.
 
-    rm_metric: str, one of ["path_gain", "rss", "sinr"]
+    rm_metric: str, one of ["path_gain", "rss", "sinr", "path_loss"]
         Metric of the coverage map to be displayed.
         Defaults to `path_gain`.
 

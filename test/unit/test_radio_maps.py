@@ -392,6 +392,92 @@ def test_sinr_map():
     assert err_sinr_map_per_tx[int(.99*len(err_sinr_map_per_tx))] < .01
     assert err_tile_to_tx == 0
 
+def test_path_loss_map():
+    """Test path loss map"""
+    
+    cm_cell_size = np.array([4., 5.])
+
+    scene = load_scene(rt.scene.munich)
+
+    # Add the first transmitter
+    tx0 = Transmitter(name='tx0',
+                        position=mi.Point3f(150, -100, 20),
+                        orientation=mi.Point3f(0., 0., dr.pi*5/6),
+                        power_dbm=44)
+    scene.add(tx0)
+
+    # Add the second transmitter
+    tx1 = Transmitter(name='tx1',
+                    position=mi.Point3f(-150, -100, 20),
+                    orientation=mi.Point3f(0., 0., dr.pi/60),
+                    power_dbm=44)
+    scene.add(tx1)
+
+    # Add the third transmitter
+    tx2 = Transmitter(name='tx2',
+                    position=mi.Point3f(0, 150 * dr.tan(dr.pi/3) - 100, 20),
+                    orientation=mi.Point3f(0., 0., -dr.pi/2),
+                    power_dbm=44)
+    scene.add(tx2)
+
+    scene.tx_array = default_array(num_rows=4, num_cols=4)
+    scene.rx_array = default_array(num_rows=4, num_cols=4)
+
+    rx_pos = dr.copy(scene.transmitters["tx0"].position)
+    rx_pos.z = 1.5
+
+    # generate coverage map
+    rm_solver = RadioMapSolver()
+    rm = rm_solver(scene,
+                   max_depth=5,
+                   center=rx_pos,
+                   orientation=mi.Point3f(0., 0., 0.),
+                   size=mi.Point2f(500., 500.),
+                   cell_size=cm_cell_size,
+                   los=True,
+                   specular_reflection=True,
+                   diffuse_reflection=True,
+                   refraction=True,
+                   samples_per_tx=int(1e7))
+
+    # retrieve path gain map
+    path_gain = rm.path_gain.numpy()
+    
+    # retrieve path loss map
+    path_loss = rm.path_loss.numpy()
+    
+    covered = path_gain > 0
+
+    # path loss is the reciprocal of the path gain
+    assert np.allclose(path_loss[covered], 1./path_gain[covered], rtol=1e-5)
+
+    # cells without coverage have an infinite path loss
+    assert np.all(np.isinf(path_loss[~covered]))
+
+    # The cell-to-tx association based on path loss must match the one
+    # based on path gain
+    assert np.array_equal(rm.tx_association("path_loss").numpy(),
+                          rm.tx_association("path_gain").numpy())
+
+    # With tx=None, the lowest path loss across transmitters is returned
+    assert np.allclose(rm.transmitter_radio_map("path_loss").numpy(),
+                       np.min(path_loss, axis=0))
+    assert np.allclose(rm.transmitter_radio_map("path_loss", tx=0).numpy(),
+                       path_loss[0])
+
+    # Sampled positions fulfill the path loss bounds
+    min_val_db, max_val_db = 60., 110.
+    _, samples_cell_ind = rm.sample_positions(100,
+                                              metric="path_loss",
+                                              min_val_db=min_val_db,
+                                              max_val_db=max_val_db)
+    samples_cell_ind = samples_cell_ind.numpy()
+    path_loss_db = 10.*np.log10(path_loss)
+    for tx in range(rm.num_tx):
+        for cell_ind in samples_cell_ind[tx]:
+            pl_db = path_loss_db[tx, cell_ind[0], cell_ind[1]]
+            assert min_val_db <= pl_db <= max_val_db
+
 def test_los():
     """Test that LoS pathgain map is close to exact path calculation"""
     _, _, nmse_db = validate_cm(los=True, tx_pol="V")

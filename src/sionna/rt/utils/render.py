@@ -414,8 +414,9 @@ def radio_map_texture(
     vmax: float | None = None,
     premultiply_alpha: bool = True,
 ) -> tuple[np.ndarray, np.ndarray]:
-    # Leave zero-valued regions as transparent
-    valid = rm_values > 0.0
+    # Leave regions without coverage as transparent. These are zero-valued
+    # for path gain, RSS, and SINR, and infinite for path loss.
+    valid = np.logical_and(rm_values > 0.0, np.isfinite(rm_values))
     opacity = valid.astype(np.float32)
 
     # Color mapping of real values
