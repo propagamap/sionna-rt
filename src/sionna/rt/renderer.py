@@ -163,13 +163,37 @@ def render(scene: rt.Scene,
     camera_inside_scene = False
     if interior:
         bbox: mi.ScalarBoundingBox3f = scene.mi_scene.bbox()
-        pos = camera.position
-        cam_pos = mi.ScalarPoint3f(pos.x[0], pos.y[0], pos.z[0])
-        camera_inside_scene = bbox.contains(cam_pos)
+        cam_to_world: mi.ScalarTransform4f | None = None
+        if isinstance(camera, str):
+            if camera == 'preview':
+                # Use the viewpoint from the preview, if available.
+                w = scene._preview_widget  # pylint: disable=protected-access
+                if w is not None:
+                    cam = w.camera
+                    cam_to_world = mi.ScalarTransform4f().look_at(
+                        origin=cam.position,
+                        target=w.orbit.target,
+                        up=(0, 0, 1),
+                    )
+            else:
+                resolved = scene.get(camera)
+                if isinstance(resolved, rt.Camera):
+                    cam_to_world = mi.ScalarTransform4f(
+                        resolved.world_transform.matrix.numpy()[:, :, 0])
+        if isinstance(camera, rt.Camera):
+            cam_to_world = mi.ScalarTransform4f(
+                camera.world_transform.matrix.numpy()[:, :, 0])
+        elif isinstance(camera, mi.Sensor):
+            cam_to_world = mi.ScalarTransform4f(
+                camera.world_transform().matrix.numpy())
+        elif isinstance(camera, mi.ScalarTransform4f):
+            cam_to_world = camera
+
+        if cam_to_world is not None:
+            cam_pos = cam_to_world @ mi.ScalarPoint3f(0.0, 0.0, 0.0)
+            camera_inside_scene = bbox.contains(cam_pos)
         if camera_inside_scene:
-            wt = camera.world_transform
-            target = wt @ mi.Point3f(0.0, 0.0, 1.0)
-            target = mi.ScalarPoint3f(target.x[0], target.y[0], target.z[0])
+            target = cam_to_world @ mi.ScalarPoint3f(0.0, 0.0, 1.0)
             to_world = mi.ScalarTransform4f().look_at(
                 cam_pos, target, [0, 0, 1]
                 )
