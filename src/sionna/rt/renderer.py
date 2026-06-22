@@ -180,7 +180,7 @@ def render(scene: rt.Scene,
                 if isinstance(resolved, rt.Camera):
                     cam_to_world = mi.ScalarTransform4f(
                         resolved.world_transform.matrix.numpy()[:, :, 0])
-        if isinstance(camera, rt.Camera):
+        elif isinstance(camera, rt.Camera):
             cam_to_world = mi.ScalarTransform4f(
                 camera.world_transform.matrix.numpy()[:, :, 0])
         elif isinstance(camera, mi.Sensor):
