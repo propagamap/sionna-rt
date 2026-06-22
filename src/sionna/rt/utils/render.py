@@ -48,6 +48,8 @@ def make_render_sensor(
     camera: str | rt.Camera | mi.ScalarTransform4f | mi.Sensor,
     resolution: tuple[int, int],
     fov: float | None,
+    near_clip: float = 0.1,
+    far_clip: float = 10000,
 ) -> mi.Sensor:
     r"""
     Instantiates a Mitsuba sensor (camera) from the provided ``camera`` object.
@@ -68,6 +70,18 @@ def make_render_sensor(
         Field of view [deg]. If `None`, the field of view will default to
         45 degrees, unless `camera` is set to `"preview"`, in which case the
         field of view of the preview camera is used.
+        
+    near_clip: float
+        Near clipping plane distance. 
+        If `None`, the near clipping plane distance will default to 0.1, 
+        unless `camera` is set to `"preview"`, in which case 
+        the near clipping plane distance of the preview camera is used.
+
+    far_clip: float
+        Far clipping plane distance.
+        If `None`, the far clipping plane distance will default to 10000, 
+        unless `camera` is set to `"preview"`, in which case 
+        the far clipping plane distance of the preview camera is used.
 
     Output
     -------
@@ -125,6 +139,11 @@ def make_render_sensor(
 
     elif isinstance(camera, mi.ScalarTransform4f):
         props['to_world'] = camera
+        props['near_clip'] = near_clip
+        props['far_clip'] = far_clip
+        # This will get overriden below if the user provided an `fov` value.
+        props['fov'] = fov
+        props['fov_axis'] = 'y'
 
     elif isinstance(camera, str):
         # Do nothing as this was already handled. This is to avoid wrongly
