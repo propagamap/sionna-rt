@@ -2,9 +2,10 @@ Radio Maps
 ==========
 
 A radio map describes a metric, such as path gain, received signal strength
-(RSS), or signal-to-interference-plus-noise ratio (SINR) for a specific transmitter at every point on a measurement surface.
+(RSS), signal-to-interference-plus-noise ratio (SINR), or path loss for a specific transmitter at every point on a measurement surface.
 In other words, for a given transmitter, it associates every point on a measurement surface
-with the channel gain, RSS, or SINR, that a receiver equipped with a dual-polarized isotropic antenna would observe at this point.
+with the channel gain, RSS, SINR, or path loss, that a receiver equipped with a dual-polarized isotropic antenna would observe at this point.
+The path loss is the reciprocal of the path gain; cells without coverage (i.e., zero path gain) have an infinite path loss.
 A radio map is not uniquely defined as it depends on the transmit array and antenna pattern, the transmitter orientation,
 as well as the transmit precoding vector. Moreover, a radio map is not continuous but discrete because the measurement surface is quantized into small planar bins.
 
@@ -16,7 +17,7 @@ In Sionna, radio maps are generated using a :doc:`radio map solver <radio_map_so
 Radio maps can be visualized by passing them as arguments to the functions :meth:`~sionna.rt.Scene.render`, :meth:`~sionna.rt.Scene.render_to_file`, or :meth:`~sionna.rt.Scene.preview`. Additionally, :class:`~sionna.rt.PlanarRadioMap` features a class method :meth:`~sionna.rt.PlanarRadioMap.show`.
 
 A very useful feature is :meth:`~sionna.rt.RadioMap.sample_positions` which allows sampling
-of random positions within the scene that have sufficient path gain, RSS, or SINR from a specific transmitter.
+of random positions within the scene that have sufficient path gain, RSS, or SINR, or a sufficiently low path loss, from a specific transmitter.
 
 .. autoclass:: sionna.rt.PlanarRadioMap
     :members:

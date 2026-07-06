@@ -446,7 +446,7 @@ class Scene:
             :math:`y = 10 \cdot \log_{10}(x)`.
 
         :param rm_metric: Metric of the radio map to be displayed
-        :type rm_metric: "path_gain" | "rss" | "sinr"
+        :type rm_metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param rm_tx: When ``radio_map`` is specified, controls for which of
             the transmitters the radio map is shown. Either the
@@ -606,7 +606,7 @@ class Scene:
             :math:`y = 10 \cdot \log_{10}(x)`.
 
         :param rm_metric: Metric of the radio map to be displayed
-        :type rm_metric: "path_gain" | "rss" | "sinr"
+        :type rm_metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param rm_show_color_bar: Show color bar
 
@@ -689,7 +689,11 @@ class Scene:
         if show_color_bar:
             cm = getattr(radio_map, rm_metric).numpy()
             if rm_tx is None:
-                cm = np.max(cm, axis=0)
+                # The lower the path loss, the better
+                if rm_metric == "path_loss":
+                    cm = np.min(cm, axis=0)
+                else:
+                    cm = np.max(cm, axis=0)
             else:
                 cm = cm[rm_tx]
                 # Ensure that dBm is correctly computed for RSS
@@ -789,7 +793,7 @@ class Scene:
             :math:`y = 10 \cdot \log_{10}(x)`.
 
         :param rm_metric: Metric of the radio map to be displayed
-        :type rm_metric: "path_gain" | "rss" | "sinr"
+        :type rm_metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param rm_tx: When ``radio_map`` is specified, controls for which of
             the transmitters the radio map is shown. Either the

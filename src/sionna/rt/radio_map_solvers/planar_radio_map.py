@@ -328,11 +328,12 @@ class PlanarRadioMap(RadioMap):
         The positions of the receivers are indicated by "x" markers.
 
         :param metric: Metric to show
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param tx: Index of the transmitter for which to show the radio
-            map. If `None`, the maximum value over all transmitters for each
-            cell is shown.
+            map. If `None`, the best value over all transmitters for each
+            cell is shown, i.e., the maximum value for path gain, RSS, and
+            SINR, and the minimum value for path loss.
 
         :param vmin: Defines the minimum value [dB] for the colormap covers.
             If set to `None`, then the minimum value across all cells is used.
@@ -354,7 +355,7 @@ class PlanarRadioMap(RadioMap):
         tensor = self.transmitter_radio_map(metric, tx)
 
         # Convert to dB-scale
-        if metric in ["path_gain", "sinr"]:
+        if metric in ["path_gain", "sinr", "path_loss"]:
             with warnings.catch_warnings(record=True) as _:
                 # Convert the path gain to dB
                 tensor = 10. * log10(tensor)
@@ -370,6 +371,9 @@ class PlanarRadioMap(RadioMap):
         elif metric == "rss":
             colorbar_label = "Received signal strength (RSS) [dBm]"
             title = 'RSS'
+        elif metric == "path_loss":
+            colorbar_label = "Path loss [dB]"
+            title = 'Path loss'
         else:
             colorbar_label = "Signal-to-interference-plus-noise ratio (SINR)"\
                             " [dB]"
@@ -381,7 +385,8 @@ class PlanarRadioMap(RadioMap):
 
         # Set label
         if (tx is None) & (self.num_tx > 1):
-            title = 'Highest ' + title + ' across all TXs'
+            best = 'Lowest ' if metric == "path_loss" else 'Highest '
+            title = best + title + ' across all TXs'
         elif tx is not None:
             title = title + f" for TX '{tx}'"
         plt.colorbar(label=colorbar_label)
@@ -425,7 +430,7 @@ class PlanarRadioMap(RadioMap):
         by "+" and "x" markers, respectively.
 
         :param metric: Metric to show
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param show_tx: If set to `True`, then the position of the transmitters
             are shown.
@@ -444,7 +449,7 @@ class PlanarRadioMap(RadioMap):
         tx_cell_indices = self.tx_cell_indices
         rx_cell_indices = self.rx_cell_indices
 
-        if metric not in ["path_gain", "rss", "sinr"]:
+        if metric not in ["path_gain", "rss", "sinr", "path_loss"]:
             raise ValueError("Invalid metric")
 
         # Create the colormap and normalization
@@ -500,12 +505,12 @@ class PlanarRadioMap(RadioMap):
     def tx_association(self, metric: str = "path_gain") -> mi.TensorXi:
         r"""Computes cell-to-transmitter association
 
-        Each cell is associated with the transmitter providing the highest
-        metric, such as path gain, received signal strength (RSS), or
-        SINR.
+        Each cell is associated with the transmitter providing the best
+        metric, i.e., the highest path gain, received signal strength (RSS),
+        or SINR, or the lowest path loss.
 
         :param metric: Metric to be used
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :return: Cell-to-transmitter association
         """
@@ -604,15 +609,15 @@ class PlanarRadioMap(RadioMap):
         :param num_pos: Number of returned random positions for each transmitter
 
         :param metric: Metric to be considered for sampling positions
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param min_val_db: Minimum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Positions are only sampled from cells where the selected metric is
             larger than or equal to this value. Ignored if `None`.
 
         :param max_val_db: Maximum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Positions are only sampled from cells where the selected metric is
             smaller than or equal to this value.
             Ignored if `None`.

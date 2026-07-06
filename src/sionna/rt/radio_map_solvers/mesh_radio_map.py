@@ -272,15 +272,15 @@ class MeshRadioMap(RadioMap):
         :param num_pos: Number of returned random positions for each transmitter
 
         :param metric: Metric to be considered for sampling positions
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param min_val_db: Minimum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Positions are only sampled from cells where the selected metric is
             larger than or equal to this value. Ignored if `None`.
 
         :param max_val_db: Maximum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Positions are only sampled from cells where the selected metric is
             smaller than or equal to this value.
             Ignored if `None`.

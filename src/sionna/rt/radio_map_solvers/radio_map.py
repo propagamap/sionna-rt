@@ -199,15 +199,30 @@ class RadioMap(ABC):
         sinr_map = rss / (interference + noise)
         return sinr_map
 
+    @property
+    def path_loss(self):
+        # pylint: disable=line-too-long
+        r"""Path loss across the radio map from all transmitters [unitless, linear scale]
+
+        The path loss is the reciprocal of the :attr:`path_gain`. Cells
+        without coverage (i.e., zero path gain) have an infinite path loss.
+
+        The shape of the tensor depends on the subclass.
+
+        :type: :py:class:`mi.TensorXf` with shape `[num_tx, ...]`,
+            where the specific dimensions are defined by the subclass.
+        """
+        return dr.rcp(self.path_gain)
+
     def tx_association(self, metric: str = "path_gain") -> mi.TensorXi:
         r"""Computes cell-to-transmitter association.
 
-        Each cell is associated with the transmitter providing the highest
-        metric, such as path gain, received signal strength (RSS), or
-        SINR.
+        Each cell is associated with the transmitter providing the best
+        metric, i.e., the highest path gain, received signal strength (RSS),
+        or SINR, or the lowest path loss.
 
         :param metric: Metric to be used
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :return: Cell-to-transmitter association. The value -1 indicates that
                  there is no coverage for the cell.
@@ -217,8 +232,12 @@ class RadioMap(ABC):
 
 
         # Get tensor for desired metric
-        if metric not in ["path_gain", "rss", "sinr"]:
+        if metric not in ["path_gain", "rss", "sinr", "path_loss"]:
             raise ValueError("Invalid metric")
+        # The transmitter with the lowest path loss is the one with the
+        # highest path gain
+        if metric == "path_loss":
+            metric = "path_gain"
         radio_map = getattr(self, metric)
 
         # Equivalent to argmax
@@ -265,15 +284,15 @@ class RadioMap(ABC):
         :param num_cells: Number of returned random cells for each transmitter
 
         :param metric: Metric to be considered for sampling cells
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param min_val_db: Minimum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Only cells for which the selected metric is larger than or equal to
             this value are sampled. Ignored if `None`.
 
         :param max_val_db: Maximum value for the selected metric ([dB] for path
-            gain and SINR; [dBm] for RSS).
+            gain, SINR, and path loss; [dBm] for RSS).
             Only cells for which the selected metric is smaller than or equal to
             this value are sampled. Ignored if `None`.
 
@@ -298,7 +317,7 @@ class RadioMap(ABC):
         num_tx = self.num_tx
         cells_count = self.cells_count
 
-        if metric not in ["path_gain", "rss", "sinr"]:
+        if metric not in ["path_gain", "rss", "sinr", "path_loss"]:
             raise ValueError("Invalid metric")
 
         if not isinstance(num_cells, int):
@@ -331,13 +350,13 @@ class RadioMap(ABC):
         cm = dr.reshape(mi.TensorXf, cm, [num_tx, cells_count])
 
         # Convert to dB-scale
-        if metric in ["path_gain", "sinr"]:
+        if metric in ["path_gain", "sinr", "path_loss"]:
             with warnings.catch_warnings(record=True) as _:
-                # Convert the path gain to dB
+                # Convert the path gain, SINR, or path loss to dB
                 cm = 10. * log10(cm)
         else:
             with warnings.catch_warnings(record=True) as _:
-                # Convert the signal strengmth to dBm
+                # Convert the signal strength to dBm
                 cm = watt_to_dbm(cm)
 
         # Transmitters positions
@@ -413,11 +432,11 @@ class RadioMap(ABC):
         r"""Computes and visualizes the CDF of a metric of the radio map
 
         :param metric: Metric to be shown
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
 
         :param tx: Index or name of the transmitter for which to show the radio
             map. If `None`, the maximum value over all transmitters for each
-            cell is shown.
+            cell is shown (the minimum for the ``path_loss`` metric).
 
         :param bins: Number of bins used to compute the CDF
 
@@ -432,7 +451,7 @@ class RadioMap(ABC):
         # Flatten tensor
         tensor = dr.ravel(tensor)
 
-        if metric in ["path_gain", "sinr"]:
+        if metric in ["path_gain", "sinr", "path_loss"]:
             with warnings.catch_warnings(record=True) as _:
                 # Convert the path gain to dB
                 tensor = 10.*log10(tensor)
@@ -444,7 +463,7 @@ class RadioMap(ABC):
         # Compute the CDF
 
         # Cells with no coverage are excluded
-        active = tensor != float("-inf")
+        active = dr.isfinite(tensor)
         num_active = dr.count(active)
         # Compute the range
         max_val = dr.max(tensor)
@@ -476,11 +495,15 @@ class RadioMap(ABC):
         elif metric=="rss":
             xlabel = "Received signal strength (RSS) [dBm]"
             title = "RSS"
+        elif metric=="path_loss":
+            xlabel = "Path loss [dB]"
+            title = "Path loss"
         else:
             xlabel = "Signal-to-interference-plus-noise ratio (SINR) [dB]"
             title = "SINR"
         if (tx is None) & (self.num_tx > 1):
-            title = 'Highest ' + title + ' across all TXs'
+            best = 'Lowest ' if metric == "path_loss" else 'Highest '
+            title = best + title + ' across all TXs'
         elif tx is not None:
             title = title + f' for TX {tx}'
 
@@ -497,18 +520,20 @@ class RadioMap(ABC):
         r"""Returns the radio map values corresponding to transmitter ``tx``
         and a specific ``metric``
 
-        If ``tx`` is `None`, then returns for each cell the maximum value
-        accross the transmitters.
+        If ``tx`` is `None`, then returns for each cell the best value
+        accross the transmitters, i.e., the maximum value for path gain, RSS,
+        and SINR, and the minimum value for path loss.
 
         :param metric: Metric for which to return the radio map
-        :type metric: "path_gain" | "rss" | "sinr"
+        :type metric: "path_gain" | "rss" | "sinr" | "path_loss"
         """
 
-        if metric not in ("path_gain", "rss", "sinr"):
+        if metric not in ("path_gain", "rss", "sinr", "path_loss"):
             raise ValueError("Invalid metric")
         tensor = getattr(self, metric)
 
-        # Select metric for a specific transmitter or compute max
+        # Select metric for a specific transmitter or compute the best value
+        # across transmitters
         if tx is not None:
             if not isinstance(tx, int):
                 msg = "Invalid type for `tx`: Must be an int, or None"
@@ -517,6 +542,8 @@ class RadioMap(ABC):
                 raise ValueError(f"Invalid transmitter index {tx}, expected "
                                f"index in range [0, {self.num_tx}).")
             tensor = tensor[tx]
+        elif metric == "path_loss":
+            tensor = dr.min(tensor, axis=0)
         else:
             tensor = dr.max(tensor, axis=0)
 
