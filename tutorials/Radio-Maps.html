@@ -315,6 +315,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -608,7 +609,7 @@
 <p>In this notebook, you will learn how to</p>
 <ul class="simple">
 <li><p>Compute and configure radio maps</p></li>
-<li><p>Visualize different radio map metrics, such as path gain, received signal strength (RSS), and signal-to-interference-plus-noise ratio (SINR)</p></li>
+<li><p>Visualize different radio map metrics, such as path gain, received signal strength (RSS), signal-to-interference-plus-noise ratio (SINR), and path loss</p></li>
 <li><p>Interpret radio map-based user-to-transmitter association</p></li>
 <li><p>Understand the effects of precoding vectors on radio maps</p></li>
 <li><p>Sample user positions from a radio map according to various criteria</p></li>
@@ -645,7 +646,8 @@
 </section>
 <section id="Understanding-radio-maps">
 <h2>Understanding radio maps<a class="headerlink" href="#Understanding-radio-maps" title="Link to this heading"></a></h2>
-<p>A <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html">radio map</a> assigns a metric, such as path gain, received signal strength (RSS), or signal-to-interference-plus-noise ratio (SINR), for a specific transmitter to every point on a plane. In other words, for a given transmitter, it associates every point on a surface with the channel gain, RSS, or SINR, that a receiver with a specific orientation would observe at this point.</p>
+<p>A <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html">radio map</a> assigns a metric, such as path gain, received signal strength (RSS), signal-to-interference-plus-noise ratio (SINR), or path loss, for a specific transmitter to every point on a plane. In other words, for a given transmitter, it associates every point on a surface with the channel gain, RSS, SINR, or path loss, that a receiver with a specific orientation would observe at this point. The path loss is simply the reciprocal of
+the path gain, i.e., the higher the path gain, the lower the path loss. Cells without coverage (i.e., zero path gain) therefore have an infinite path loss.</p>
 <p>A radio map depends on the transmit and receive arrays and their respective antenna patterns, the transmitter and receiver orientations, as well as the transmit precoding and receive combining vectors. Moreover, a radio map is not continuous but discrete, as the plane must be quantized into small rectangular bins, which we refer to as <em>cells</em>.</p>
 <p>As a first example, we load an empty scene, place a single transmitter in it, and compute a coverage map.</p>
 <div class="nbinput nblast docutils container">
@@ -683,8 +685,8 @@
 <section id="Metrics">
 <h3>Metrics<a class="headerlink" href="#Metrics" title="Link to this heading"></a></h3>
 <p>There are several ways to visualize a radio map. The simplest option is to call the class method <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html#sionna.rt.RadioMap.show">show()</a> for the desired metric.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize path gain</span>
@@ -693,30 +695,12 @@
 <span class="c1"># Visualize received signal strength (RSS)</span>
 <span class="n">rm</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;rss&quot;</span><span class="p">);</span>
 
-<span class="c1"># Visulaize SINR</span>
+<span class="c1"># Visualize SINR</span>
 <span class="n">rm</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;sinr&quot;</span><span class="p">);</span>
+
+<span class="c1"># Visualize path loss</span>
+<span class="n">rm</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;path_loss&quot;</span><span class="p">);</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorials_Radio-Maps_7_0.png" src="../_images/tutorials_Radio-Maps_7_0.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorials_Radio-Maps_7_1.png" src="../_images/tutorials_Radio-Maps_7_1.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorials_Radio-Maps_7_2.png" src="../_images/tutorials_Radio-Maps_7_2.png" />
 </div>
 </div>
 <p>The RSS depends on the transmit power which can be modified for each transmitter as shown below.</p>
@@ -767,8 +751,8 @@ Thermal noise power:  [-113.9305] [dBm]
 </pre></div></div>
 </div>
 <p>All metrics of a radio map can be directly accessed as tensors as shown in the next cell. This can be useful to define new metrics or visualize metrics in a different form, such as CDF plots, etc.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Metrics have the shape</span>
@@ -777,6 +761,7 @@ Thermal noise power:  [-113.9305] [dBm]
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">path_gain</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># Path gain</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">rss</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># RSS</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">sinr</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># SINR</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">path_loss</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1"># Path loss</span>
 
 <span class="c1"># The location of all cell centers in the global coordinate system of the scene</span>
 <span class="c1"># can be accessed via:</span>
@@ -784,17 +769,6 @@ Thermal noise power:  [-113.9305] [dBm]
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">cell_centers</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-rm.path_gain.shape=(1, 80, 80)
-rm.rss.shape=(1, 80, 80)
-rm.sinr.shape=(1, 80, 80)
-rm.cell_centers.shape=(80, 80, 3)
-</pre></div></div>
 </div>
 </section>
 <section id="Multiple-transmitters">

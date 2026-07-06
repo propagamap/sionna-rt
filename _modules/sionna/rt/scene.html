@@ -309,6 +309,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -1062,7 +1063,7 @@
 <span class="sd">            :math:`y = 10 \cdot \log_{10}(x)`.</span>
 
 <span class="sd">        :param rm_metric: Metric of the radio map to be displayed</span>
-<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :param rm_tx: When ``radio_map`` is specified, controls for which of</span>
 <span class="sd">            the transmitters the radio map is shown. Either the</span>
@@ -1225,7 +1226,7 @@
 <span class="sd">            :math:`y = 10 \cdot \log_{10}(x)`.</span>
 
 <span class="sd">        :param rm_metric: Metric of the radio map to be displayed</span>
-<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :param rm_show_color_bar: Show color bar</span>
 
@@ -1308,7 +1309,11 @@
         <span class="k">if</span> <span class="n">show_color_bar</span><span class="p">:</span>
             <span class="n">cm</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">radio_map</span><span class="p">,</span> <span class="n">rm_metric</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">rm_tx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="c1"># The lower the path loss, the better</span>
+                <span class="k">if</span> <span class="n">rm_metric</span> <span class="o">==</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">:</span>
+                    <span class="n">cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cm</span> <span class="o">=</span> <span class="n">cm</span><span class="p">[</span><span class="n">rm_tx</span><span class="p">]</span>
                 <span class="c1"># Ensure that dBm is correctly computed for RSS</span>
@@ -1411,7 +1416,7 @@
 <span class="sd">            :math:`y = 10 \cdot \log_{10}(x)`.</span>
 
 <span class="sd">        :param rm_metric: Metric of the radio map to be displayed</span>
-<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type rm_metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :param rm_tx: When ``radio_map`` is specified, controls for which of</span>
 <span class="sd">            the transmitters the radio map is shown. Either the</span>

@@ -309,6 +309,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -804,17 +805,32 @@
         <span class="n">sinr_map</span> <span class="o">=</span> <span class="n">rss</span> <span class="o">/</span> <span class="p">(</span><span class="n">interference</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sinr_map</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">path_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=line-too-long</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Path loss across the radio map from all transmitters [unitless, linear scale]</span>
+
+<span class="sd">        The path loss is the reciprocal of the :attr:`path_gain`. Cells</span>
+<span class="sd">        without coverage (i.e., zero path gain) have an infinite path loss.</span>
+
+<span class="sd">        The shape of the tensor depends on the subclass.</span>
+
+<span class="sd">        :type: :py:class:`mi.TensorXf` with shape `[num_tx, ...]`,</span>
+<span class="sd">            where the specific dimensions are defined by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">dr</span><span class="o">.</span><span class="n">rcp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_gain</span><span class="p">)</span>
+
 <div class="viewcode-block" id="RadioMap.tx_association">
 <a class="viewcode-back" href="../../../../api/radio_maps.html#sionna.rt.RadioMap.tx_association">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tx_association</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;path_gain&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mi</span><span class="o">.</span><span class="n">TensorXi</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes cell-to-transmitter association.</span>
 
-<span class="sd">        Each cell is associated with the transmitter providing the highest</span>
-<span class="sd">        metric, such as path gain, received signal strength (RSS), or</span>
-<span class="sd">        SINR.</span>
+<span class="sd">        Each cell is associated with the transmitter providing the best</span>
+<span class="sd">        metric, i.e., the highest path gain, received signal strength (RSS),</span>
+<span class="sd">        or SINR, or the lowest path loss.</span>
 
 <span class="sd">        :param metric: Metric to be used</span>
-<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :return: Cell-to-transmitter association. The value -1 indicates that</span>
 <span class="sd">                 there is no coverage for the cell.</span>
@@ -824,8 +840,12 @@
 
 
         <span class="c1"># Get tensor for desired metric</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">,</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid metric&quot;</span><span class="p">)</span>
+        <span class="c1"># The transmitter with the lowest path loss is the one with the</span>
+        <span class="c1"># highest path gain</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;path_gain&quot;</span>
         <span class="n">radio_map</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
 
         <span class="c1"># Equivalent to argmax</span>
@@ -875,15 +895,15 @@
 <span class="sd">        :param num_cells: Number of returned random cells for each transmitter</span>
 
 <span class="sd">        :param metric: Metric to be considered for sampling cells</span>
-<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :param min_val_db: Minimum value for the selected metric ([dB] for path</span>
-<span class="sd">            gain and SINR; [dBm] for RSS).</span>
+<span class="sd">            gain, SINR, and path loss; [dBm] for RSS).</span>
 <span class="sd">            Only cells for which the selected metric is larger than or equal to</span>
 <span class="sd">            this value are sampled. Ignored if `None`.</span>
 
 <span class="sd">        :param max_val_db: Maximum value for the selected metric ([dB] for path</span>
-<span class="sd">            gain and SINR; [dBm] for RSS).</span>
+<span class="sd">            gain, SINR, and path loss; [dBm] for RSS).</span>
 <span class="sd">            Only cells for which the selected metric is smaller than or equal to</span>
 <span class="sd">            this value are sampled. Ignored if `None`.</span>
 
@@ -908,7 +928,7 @@
         <span class="n">num_tx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_tx</span>
         <span class="n">cells_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells_count</span>
 
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">,</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid metric&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_cells</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -941,13 +961,13 @@
         <span class="n">cm</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">TensorXf</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="p">[</span><span class="n">num_tx</span><span class="p">,</span> <span class="n">cells_count</span><span class="p">])</span>
 
         <span class="c1"># Convert to dB-scale</span>
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">,</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">]:</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
-                <span class="c1"># Convert the path gain to dB</span>
+                <span class="c1"># Convert the path gain, SINR, or path loss to dB</span>
                 <span class="n">cm</span> <span class="o">=</span> <span class="mf">10.</span> <span class="o">*</span> <span class="n">log10</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
-                <span class="c1"># Convert the signal strengmth to dBm</span>
+                <span class="c1"># Convert the signal strength to dBm</span>
                 <span class="n">cm</span> <span class="o">=</span> <span class="n">watt_to_dbm</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
 
         <span class="c1"># Transmitters positions</span>
@@ -1026,11 +1046,11 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes and visualizes the CDF of a metric of the radio map</span>
 
 <span class="sd">        :param metric: Metric to be shown</span>
-<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 
 <span class="sd">        :param tx: Index or name of the transmitter for which to show the radio</span>
 <span class="sd">            map. If `None`, the maximum value over all transmitters for each</span>
-<span class="sd">            cell is shown.</span>
+<span class="sd">            cell is shown (the minimum for the ``path_loss`` metric).</span>
 
 <span class="sd">        :param bins: Number of bins used to compute the CDF</span>
 
@@ -1045,7 +1065,7 @@
         <span class="c1"># Flatten tensor</span>
         <span class="n">tensor</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">,</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">]:</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
                 <span class="c1"># Convert the path gain to dB</span>
                 <span class="n">tensor</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">*</span><span class="n">log10</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
@@ -1057,7 +1077,7 @@
         <span class="c1"># Compute the CDF</span>
 
         <span class="c1"># Cells with no coverage are excluded</span>
-        <span class="n">active</span> <span class="o">=</span> <span class="n">tensor</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
         <span class="n">num_active</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
         <span class="c1"># Compute the range</span>
         <span class="n">max_val</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
@@ -1089,11 +1109,15 @@
         <span class="k">elif</span> <span class="n">metric</span><span class="o">==</span><span class="s2">&quot;rss&quot;</span><span class="p">:</span>
             <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Received signal strength (RSS) [dBm]&quot;</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;RSS&quot;</span>
+        <span class="k">elif</span> <span class="n">metric</span><span class="o">==</span><span class="s2">&quot;path_loss&quot;</span><span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Path loss [dB]&quot;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Path loss&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Signal-to-interference-plus-noise ratio (SINR) [dB]&quot;</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SINR&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">tx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tx</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Highest &#39;</span> <span class="o">+</span> <span class="n">title</span> <span class="o">+</span> <span class="s1">&#39; across all TXs&#39;</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="s1">&#39;Lowest &#39;</span> <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;path_loss&quot;</span> <span class="k">else</span> <span class="s1">&#39;Highest &#39;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">best</span> <span class="o">+</span> <span class="n">title</span> <span class="o">+</span> <span class="s1">&#39; across all TXs&#39;</span>
         <span class="k">elif</span> <span class="n">tx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39; for TX </span><span class="si">{</span><span class="n">tx</span><span class="si">}</span><span class="s1">&#39;</span>
 
@@ -1113,18 +1137,20 @@
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns the radio map values corresponding to transmitter ``tx``</span>
 <span class="sd">        and a specific ``metric``</span>
 
-<span class="sd">        If ``tx`` is `None`, then returns for each cell the maximum value</span>
-<span class="sd">        accross the transmitters.</span>
+<span class="sd">        If ``tx`` is `None`, then returns for each cell the best value</span>
+<span class="sd">        accross the transmitters, i.e., the maximum value for path gain, RSS,</span>
+<span class="sd">        and SINR, and the minimum value for path loss.</span>
 
 <span class="sd">        :param metric: Metric for which to return the radio map</span>
-<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot;</span>
+<span class="sd">        :type metric: &quot;path_gain&quot; | &quot;rss&quot; | &quot;sinr&quot; | &quot;path_loss&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;path_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;rss&quot;</span><span class="p">,</span> <span class="s2">&quot;sinr&quot;</span><span class="p">,</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid metric&quot;</span><span class="p">)</span>
         <span class="n">tensor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span>
 
-        <span class="c1"># Select metric for a specific transmitter or compute max</span>
+        <span class="c1"># Select metric for a specific transmitter or compute the best value</span>
+        <span class="c1"># across transmitters</span>
         <span class="k">if</span> <span class="n">tx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Invalid type for `tx`: Must be an int, or None&quot;</span>
@@ -1133,6 +1159,8 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid transmitter index </span><span class="si">{</span><span class="n">tx</span><span class="si">}</span><span class="s2">, expected &quot;</span>
                                <span class="sa">f</span><span class="s2">&quot;index in range [0, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tx</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
             <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span><span class="p">[</span><span class="n">tx</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;path_loss&quot;</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tensor</span> <span class="o">=</span> <span class="n">dr</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 

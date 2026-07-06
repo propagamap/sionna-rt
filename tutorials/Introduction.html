@@ -315,6 +315,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -1134,8 +1135,8 @@ Shape of taps:  (1, 2, 1, 1, 1, 107)
 </section>
 <section id="Radio-Maps">
 <h2>Radio Maps<a class="headerlink" href="#Radio-Maps" title="Link to this heading"></a></h2>
-<p>Sionna RT can compute radio maps for all transmitters in a scene. A <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html">RadioMap</a> assigns a metric, such as path gain, received signal strength (RSS), or signal-to-interference-plus-noise ratio (SINR), for a specific transmitter to every point on a plane. In other words, for a given transmitter, it associates every point on a surface with the channel gain, RSS, or SINR, that a receiver with a specific orientation would observe at this
-point.</p>
+<p>Sionna RT can compute radio maps for all transmitters in a scene. A <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_maps.html">RadioMap</a> assigns a metric, such as path gain, received signal strength (RSS), signal-to-interference-plus-noise ratio (SINR), or path loss, for a specific transmitter to every point on a plane. In other words, for a given transmitter, it associates every point on a surface with the channel gain, RSS, SINR, or path loss, that a receiver with a specific orientation would
+observe at this point.</p>
 <p>Like the computation of propagation paths requires a <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/paths_solvers.html">PathSolver</a>, the computation of radio maps requires a <a class="reference external" href="https://nvlabs.github.io/sionna/rt/api/radio_map_solvers.html">RadioMapSolver</a>. The following code snippet shows how a radio map can be computed and displayed.</p>
 <p>More information about radio maps can be found in the detailed <a class="reference external" href="https://nvlabs.github.io/sionna/rt/tutorials/Radio-Maps.html">Tutorial on Radio Maps</a>.</p>
 <div class="nbinput nblast docutils container">

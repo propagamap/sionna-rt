@@ -314,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -605,9 +606,10 @@
   <section id="radio-maps">
 <h1>Radio Maps<a class="headerlink" href="#radio-maps" title="Link to this heading"></a></h1>
 <p>A radio map describes a metric, such as path gain, received signal strength
-(RSS), or signal-to-interference-plus-noise ratio (SINR) for a specific transmitter at every point on a measurement surface.
+(RSS), signal-to-interference-plus-noise ratio (SINR), or path loss for a specific transmitter at every point on a measurement surface.
 In other words, for a given transmitter, it associates every point on a measurement surface
-with the channel gain, RSS, or SINR, that a receiver equipped with a dual-polarized isotropic antenna would observe at this point.
+with the channel gain, RSS, SINR, or path loss, that a receiver equipped with a dual-polarized isotropic antenna would observe at this point.
+The path loss is the reciprocal of the path gain; cells without coverage (i.e., zero path gain) have an infinite path loss.
 A radio map is not uniquely defined as it depends on the transmit array and antenna pattern, the transmitter orientation,
 as well as the transmit precoding vector. Moreover, a radio map is not continuous but discrete because the measurement surface is quantized into small planar bins.</p>
 <p>In Sionna, radio maps are generated using a <a class="reference internal" href="radio_map_solvers.html"><span class="doc">radio map solver</span></a>, which returns an instance of a specialized class derived from the abstract base class <a class="reference internal" href="#sionna.rt.RadioMap" title="sionna.rt.RadioMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">RadioMap</span></code></a>. The built-in radio map solver can compute a radio map for either of the following:</p>
@@ -617,7 +619,7 @@ as well as the transmit precoding vector. Moreover, a radio map is not continuou
 </ul>
 <p>Radio maps can be visualized by passing them as arguments to the functions <a class="reference internal" href="scene.html#sionna.rt.Scene.render" title="sionna.rt.Scene.render"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code></a>, <a class="reference internal" href="scene.html#sionna.rt.Scene.render_to_file" title="sionna.rt.Scene.render_to_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">render_to_file()</span></code></a>, or <a class="reference internal" href="scene.html#sionna.rt.Scene.preview" title="sionna.rt.Scene.preview"><code class="xref py py-meth docutils literal notranslate"><span class="pre">preview()</span></code></a>. Additionally, <a class="reference internal" href="#sionna.rt.PlanarRadioMap" title="sionna.rt.PlanarRadioMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlanarRadioMap</span></code></a> features a class method <a class="reference internal" href="#sionna.rt.PlanarRadioMap.show" title="sionna.rt.PlanarRadioMap.show"><code class="xref py py-meth docutils literal notranslate"><span class="pre">show()</span></code></a>.</p>
 <p>A very useful feature is <code class="xref py py-meth docutils literal notranslate"><span class="pre">sample_positions()</span></code> which allows sampling
-of random positions within the scene that have sufficient path gain, RSS, or SINR from a specific transmitter.</p>
+of random positions within the scene that have sufficient path gain, RSS, or SINR, or a sufficiently low path loss, from a specific transmitter.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="sionna.rt.PlanarRadioMap">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sionna.rt.</span></span><span class="sig-name descname"><span class="pre">PlanarRadioMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sionna/rt/radio_map_solvers/planar_radio_map.html#PlanarRadioMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sionna.rt.PlanarRadioMap" title="Link to this definition"></a></dt>
@@ -849,13 +851,13 @@ directly below the transmitter are sampled.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_pos</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of returned random positions for each transmitter</p></li>
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be considered for sampling positions</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be considered for sampling positions</p></li>
 <li><p><strong>min_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Minimum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Positions are only sampled from cells where the selected metric is
 larger than or equal to this value. Ignored if <cite>None</cite>.</p></li>
 <li><p><strong>max_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Positions are only sampled from cells where the selected metric is
 smaller than or equal to this value.
 Ignored if <cite>None</cite>.</p></li>
@@ -898,10 +900,11 @@ The positions of the receivers are indicated by “x” markers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to show</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to show</p></li>
 <li><p><strong>tx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Index of the transmitter for which to show the radio
-map. If <cite>None</cite>, the maximum value over all transmitters for each
-cell is shown.</p></li>
+map. If <cite>None</cite>, the best value over all transmitters for each
+cell is shown, i.e., the maximum value for path gain, RSS, and
+SINR, and the minimum value for path loss.</p></li>
 <li><p><strong>vmin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Defines the minimum value [dB] for the colormap covers.
 If set to <cite>None</cite>, then the minimum value across all cells is used.</p></li>
 <li><p><strong>vmax</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Defines the maximum value [dB] for the colormap covers.
@@ -930,7 +933,7 @@ by “+” and “x” markers, respectively.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to show</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to show</p></li>
 <li><p><strong>show_tx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If set to <cite>True</cite>, then the position of the transmitters
 are shown.</p></li>
 <li><p><strong>show_rx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If set to <cite>True</cite>, then the position of the receivers are
@@ -965,12 +968,12 @@ number of colors is generated.</p></li>
 <dt class="sig sig-object py" id="sionna.rt.PlanarRadioMap.tx_association">
 <span class="sig-name descname"><span class="pre">tx_association</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'path_gain'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sionna/rt/radio_map_solvers/planar_radio_map.html#PlanarRadioMap.tx_association"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sionna.rt.PlanarRadioMap.tx_association" title="Link to this definition"></a></dt>
 <dd><p>Computes cell-to-transmitter association</p>
-<p>Each cell is associated with the transmitter providing the highest
-metric, such as path gain, received signal strength (RSS), or
-SINR.</p>
+<p>Each cell is associated with the transmitter providing the best
+metric, i.e., the highest path gain, received signal strength (RSS),
+or SINR, or the lowest path loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be used</p>
+<dd class="field-odd"><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be used</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">drjit.llvm.ad.TensorXi</span></code></span></p>
@@ -1173,13 +1176,13 @@ directly below the transmitter are sampled.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_pos</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of returned random positions for each transmitter</p></li>
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be considered for sampling positions</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be considered for sampling positions</p></li>
 <li><p><strong>min_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Minimum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Positions are only sampled from cells where the selected metric is
 larger than or equal to this value. Ignored if <cite>None</cite>.</p></li>
 <li><p><strong>max_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Positions are only sampled from cells where the selected metric is
 smaller than or equal to this value.
 Ignored if <cite>None</cite>.</p></li>
@@ -1266,10 +1269,10 @@ Not required for non-diffracted paths.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be shown</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be shown</p></li>
 <li><p><strong>tx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Index or name of the transmitter for which to show the radio
 map. If <cite>None</cite>, the maximum value over all transmitters for each
-cell is shown.</p></li>
+cell is shown (the minimum for the <code class="docutils literal notranslate"><span class="pre">path_loss</span></code> metric).</p></li>
 <li><p><strong>bins</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of bins used to compute the CDF</p></li>
 </ul>
 </dd>
@@ -1355,6 +1358,21 @@ where the specific dimensions are defined by the subclass.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="sionna.rt.RadioMap.path_loss">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path_loss</span></span><a class="headerlink" href="#sionna.rt.RadioMap.path_loss" title="Link to this definition"></a></dt>
+<dd><p>Path loss across the radio map from all transmitters [unitless, linear scale]</p>
+<p>The path loss is the reciprocal of the <a class="reference internal" href="#sionna.rt.RadioMap.path_gain" title="sionna.rt.RadioMap.path_gain"><code class="xref py py-attr docutils literal notranslate"><span class="pre">path_gain</span></code></a>. Cells
+without coverage (i.e., zero path gain) have an infinite path loss.</p>
+<p>The shape of the tensor depends on the subclass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">mi.TensorXf</span></code> with shape <cite>[num_tx, …]</cite>,
+where the specific dimensions are defined by the subclass.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="sionna.rt.RadioMap.rss">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rss</span></span><a class="headerlink" href="#sionna.rt.RadioMap.rss" title="Link to this definition"></a></dt>
 <dd><p>Received signal strength (RSS) across the radio map from all
@@ -1386,13 +1404,13 @@ for each transmitter provide the highest SINR or RSS.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_cells</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of returned random cells for each transmitter</p></li>
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be considered for sampling cells</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be considered for sampling cells</p></li>
 <li><p><strong>min_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Minimum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Only cells for which the selected metric is larger than or equal to
 this value are sampled. Ignored if <cite>None</cite>.</p></li>
 <li><p><strong>max_val_db</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Maximum value for the selected metric ([dB] for path
-gain and SINR; [dBm] for RSS).
+gain, SINR, and path loss; [dBm] for RSS).
 Only cells for which the selected metric is smaller than or equal to
 this value are sampled. Ignored if <cite>None</cite>.</p></li>
 <li><p><strong>min_dist</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – Minimum distance [m] from transmitter for all random
@@ -1435,12 +1453,13 @@ where the specific dimensions are defined by the subclass.</p>
 <span class="sig-name descname"><span class="pre">transmitter_radio_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'path_gain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sionna/rt/radio_map_solvers/radio_map.html#RadioMap.transmitter_radio_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sionna.rt.RadioMap.transmitter_radio_map" title="Link to this definition"></a></dt>
 <dd><p>Returns the radio map values corresponding to transmitter <code class="docutils literal notranslate"><span class="pre">tx</span></code>
 and a specific <code class="docutils literal notranslate"><span class="pre">metric</span></code></p>
-<p>If <code class="docutils literal notranslate"><span class="pre">tx</span></code> is <cite>None</cite>, then returns for each cell the maximum value
-accross the transmitters.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">tx</span></code> is <cite>None</cite>, then returns for each cell the best value
+accross the transmitters, i.e., the maximum value for path gain, RSS,
+and SINR, and the minimum value for path loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric for which to return the radio map</p></li>
+<li><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric for which to return the radio map</p></li>
 <li><p><strong>tx</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -1454,12 +1473,12 @@ accross the transmitters.</p>
 <dt class="sig sig-object py" id="sionna.rt.RadioMap.tx_association">
 <span class="sig-name descname"><span class="pre">tx_association</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'path_gain'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sionna/rt/radio_map_solvers/radio_map.html#RadioMap.tx_association"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sionna.rt.RadioMap.tx_association" title="Link to this definition"></a></dt>
 <dd><p>Computes cell-to-transmitter association.</p>
-<p>Each cell is associated with the transmitter providing the highest
-metric, such as path gain, received signal strength (RSS), or
-SINR.</p>
+<p>Each cell is associated with the transmitter providing the best
+metric, i.e., the highest path gain, received signal strength (RSS),
+or SINR, or the lowest path loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric to be used</p>
+<dd class="field-odd"><p><strong>metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric to be used</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">drjit.llvm.ad.TensorXi</span></code></span></p>

@@ -314,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.num_rx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_rx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.num_tx"><code class="docutils literal notranslate"><span class="pre">RadioMap.num_tx</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.path_gain"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.path_loss"><code class="docutils literal notranslate"><span class="pre">RadioMap.path_loss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.rss"><code class="docutils literal notranslate"><span class="pre">RadioMap.rss</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.sample_cells"><code class="docutils literal notranslate"><span class="pre">RadioMap.sample_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="radio_maps.html#sionna.rt.RadioMap.sinr"><code class="docutils literal notranslate"><span class="pre">RadioMap.sinr</span></code></a></li>
@@ -835,7 +836,7 @@ This allows visualizing the interior of meshes, such as buildings.</p></li>
 <li><p><strong>rm_db_scale</strong> (<span class="sphinx_autodoc_typehints-type">bool</span>) – Use logarithmic scale for radio map
 visualization, i.e. the radio map values are mapped to:
 <span class="math notranslate nohighlight">\(y = 10 \cdot \log_{10}(x)\)</span>.</p></li>
-<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric of the radio map to be displayed</p></li>
+<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric of the radio map to be displayed</p></li>
 <li><p><strong>rm_tx</strong> (<span class="sphinx_autodoc_typehints-type">int | str | None</span>) – When <code class="docutils literal notranslate"><span class="pre">radio_map</span></code> is specified, controls for which of
 the transmitters the radio map is shown. Either the
 transmitter’s name or index can be given. If <cite>None</cite>, the maximum
@@ -941,7 +942,7 @@ the far clipping plane distance of the preview camera is used.</p></li>
 <li><p><strong>rm_db_scale</strong> (<span class="sphinx_autodoc_typehints-type">bool</span>) – Use logarithmic scale for radio map
 visualization, i.e. the radio map values are mapped to:
 <span class="math notranslate nohighlight">\(y = 10 \cdot \log_{10}(x)\)</span>.</p></li>
-<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric of the radio map to be displayed</p></li>
+<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric of the radio map to be displayed</p></li>
 <li><p><strong>rm_show_color_bar</strong> (<span class="sphinx_autodoc_typehints-type">bool</span>) – Show color bar</p></li>
 <li><p><strong>rm_tx</strong> (<span class="sphinx_autodoc_typehints-type">int | str | None</span>) – When <code class="docutils literal notranslate"><span class="pre">radio_map</span></code> is specified, controls for which of
 the transmitters the radio map is shown. Either the
@@ -1017,7 +1018,7 @@ the far clipping plane distance of the preview camera is used.</p></li>
 <li><p><strong>rm_db_scale</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Use logarithmic scale for radio map
 visualization, i.e. the radio map values are mapped to:
 <span class="math notranslate nohighlight">\(y = 10 \cdot \log_{10}(x)\)</span>.</p></li>
-<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em>) – Metric of the radio map to be displayed</p></li>
+<li><p><strong>rm_metric</strong> (<em>&quot;path_gain&quot;</em><em> | </em><em>&quot;rss&quot;</em><em> | </em><em>&quot;sinr&quot;</em><em> | </em><em>&quot;path_loss&quot;</em>) – Metric of the radio map to be displayed</p></li>
 <li><p><strong>rm_tx</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span>) – When <code class="docutils literal notranslate"><span class="pre">radio_map</span></code> is specified, controls for which of
 the transmitters the radio map is shown. Either the
 transmitter’s name or index can be given. If <cite>None</cite>, the maximum
