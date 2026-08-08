@@ -159,7 +159,7 @@ def itu_concrete(fc):
 
     fc_GHz = fc / 1e9
 
-    # From ITU-R P.2040, Table 3
+    # From ITU-R P.2040, Table 3, Frequency range 1 GHz - 100 GHz
     a = 5.24
     b = 0.0
     c = 0.0462
